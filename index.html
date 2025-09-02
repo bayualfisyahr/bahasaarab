@@ -1,728 +1,427 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Belajar Bahasa Arab Interaktif</title>
     <!-- Memuat Tailwind CSS untuk desain yang modern dan responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Memuat Google Fonts untuk tipografi yang menarik -->
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com" />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Amiri:wght@700&display=swap"
-      rel="stylesheet" />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    
     <style>
-      /* Menambahkan gaya kustom di sini */
-      body {
-        font-family: "Poppins", sans-serif;
-      }
-      /* Menggunakan font Amiri yang indah untuk teks Arab */
-      .teks-arab {
-        font-family: "Amiri", serif;
-        font-size: 1.75rem; /* Ukuran font lebih besar agar mudah dibaca */
-        line-height: 2.8rem;
-      }
-      /* Efek saat kata Arab di-hover atau di-klik */
-      .kata {
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        padding: 2px 4px;
-        border-radius: 8px;
-      }
-      .kata:hover {
-        background-color: #fef9c3; /* Kuning muda */
-        transform: scale(1.05);
-      }
-      .kata.highlight {
-        background-color: #fde047; /* Kuning lebih pekat */
-        color: #422006;
-      }
-      /* Gaya untuk tombol kuis */
-      .tombol-pilihan {
-        transition: all 0.2s ease-in-out;
-      }
-      .tombol-pilihan:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-      .tombol-pilihan.benar {
-        background-color: #4ade80 !important; /* Hijau */
-        color: white !important;
-        border-color: #22c55e !important;
-      }
-      .tombol-pilihan.salah {
-        background-color: #f87171 !important; /* Merah */
-        color: white !important;
-        border-color: #ef4444 !important;
-      }
+        /* Menambahkan gaya kustom di sini */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Menggunakan font Amiri yang indah untuk teks Arab */
+        .teks-arab {
+            font-family: 'Amiri', serif;
+            font-size: 1.75rem; /* Ukuran font lebih besar agar mudah dibaca */
+            line-height: 2.8rem;
+        }
+        /* Efek saat kata Arab di-hover atau di-klik */
+        .kata {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 2px 4px;
+            border-radius: 8px;
+        }
+        .kata:hover {
+            background-color: #fef9c3; /* Kuning muda */
+            transform: scale(1.05);
+        }
+        .kata.highlight {
+            background-color: #fde047; /* Kuning lebih pekat */
+            color: #422006;
+        }
+        /* Gaya untuk tombol kuis */
+        .tombol-pilihan {
+            transition: all 0.2s ease-in-out;
+        }
+        .tombol-pilihan:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .tombol-pilihan.benar {
+            background-color: #4ade80 !important; /* Hijau */
+            color: white !important;
+            border-color: #22c55e !important;
+        }
+        .tombol-pilihan.salah {
+            background-color: #f87171 !important; /* Merah */
+            color: white !important;
+            border-color: #ef4444 !important;
+        }
     </style>
-  </head>
-  <body class="bg-blue-50 text-gray-800">
+</head>
+<body class="bg-blue-50 text-gray-800">
+
     <div class="container mx-auto p-4 sm:p-8 max-w-4xl">
-      <!-- Judul Utama -->
-      <header class="text-center mb-8">
-        <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">📖 Belajar Bahasa Arab Bersama Muhammad ✨</h1>
-        <p class="text-gray-600 mt-2">Sebuah Cerita Seru dan Interaktif!</p>
-      </header>
+        
+        <!-- Judul Utama -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">📖 Pelajaran Bahasa Arab 📖</h1>
+            <p class="text-xl font-semibold text-gray-700 mt-2">MDTA Daarut Tafaqquh</p>
+            <p class="text-md text-gray-500 mt-1">Selasa, 2 September 2025</p>
+        </header>
 
-      <main>
-        <!-- Bagian Cerita dan Terjemahan -->
-        <section class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <h2 class="text-2xl font-bold mb-4 text-center">👇 Baca Ceritanya & Klik Kata untuk Artinya! 👇</h2>
+        <main>
+            <!-- Bagian Cerita dan Terjemahan -->
+            <section class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-4 text-center">👇 Baca Ceritanya & Klik Kata untuk Artinya! 👇</h2>
+                
+                <!-- Kotak untuk menampilkan terjemahan -->
+                <div id="kotak-terjemahan" class="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg my-4 text-center text-2xl font-bold h-20 flex items-center justify-center transition-all">
+                    Arahkan kursor atau klik sebuah kata Arab...
+                </div>
+                
+                <!-- Teks Cerita Interaktif -->
+                <div id="materi-cerita" class="teks-arab dir-rtl text-right leading-relaxed" dir="rtl">
+                    <p class="mb-4">
+                        <span class="kata" data-terjemahan="Kami">نَحْنُ</span>
+                        <span class="kata" data-terjemahan="keluarga">أُسْرَةٌ</span>
+                        <span class="kata" data-terjemahan="yang bahagia.">سَعِيدَةٌ.</span>
+                        <span class="kata" data-terjemahan="Nama saya">اسْمِي</span>
+                        <span class="kata" data-terjemahan="Ahmad,">أَحْمَدُ،</span>
+                        <span class="kata" data-terjemahan="saudara laki-lakiku">أَخِي</span>
+                        <span class="kata" data-terjemahan="namanya">اسْمُهُ</span>
+                        <span class="kata" data-terjemahan="Khalid,">خَالِدٌ،</span>
+                        <span class="kata" data-terjemahan="saudari perempuanku">أُخْتِي</span>
+                        <span class="kata" data-terjemahan="namanya">اسْمُهَا</span>
+                        <span class="kata" data-terjemahan="Fatimah.">فَاطِمَةُ.</span>
+                    </p>
+                    <p class="mb-4">
+                        <span class="kata" data-terjemahan="Di">فِي</span>
+                        <span class="kata" data-terjemahan="pagi hari">الصَّبَاحِ</span>
+                        <span class="kata" data-terjemahan="saya">أَنَا</span>
+                        <span class="kata" data-terjemahan="menulis">أَكْتُبُ</span>
+                        <span class="kata" data-terjemahan="di">فِي</span>
+                        <span class="kata" data-terjemahan="buku tulisku.">دَفْتَرِي.</span>
+                        <span class="kata" data-terjemahan="Kamu (lk)">أَنْتَ</span>
+                        <span class="kata" data-terjemahan="wahai">يَا</span>
+                        <span class="kata" data-terjemahan="Khalid">خَالِدُ</span>
+                        <span class="kata" data-terjemahan="membaca">تَقْرَأُ</span>
+                        <span class="kata" data-terjemahan="sebuah buku">كِتَابًا</span>
+                        <span class="kata" data-terjemahan="di">فِي</span>
+                        <span class="kata" data-terjemahan="kelas.">الْفَصْلِ.</span>
+                        <span class="kata" data-terjemahan="Dan kamu (pr)">وَأَنْتِ</span>
+                        <span class="kata" data-terjemahan="wahai">يَا</span>
+                        <span class="kata" data-terjemahan="Fatimah">فَاطِمَةُ</span>
+                        <span class="kata" data-terjemahan="menulis">تَكْتُبِينَ</span>
+                        <span class="kata" data-terjemahan="di atas">عَلَى</span>
+                        <span class="kata" data-terjemahan="papan tulis.">السَّبُّورَةِ.</span>
+                    </p>
+                     <p>
+                        <span class="kata" data-terjemahan="Setelah itu">بَعْدَ ذَلِكَ</span>
+                        <span class="kata" data-terjemahan="saya">أَنَا</span>
+                        <span class="kata" data-terjemahan="pergi">أَذْهَبُ</span>
+                        <span class="kata" data-terjemahan="ke">إِلَى</span>
+                        <span class="kata" data-terjemahan="rumah.">الْبَيْتِ.</span>
+                        <span class="kata" data-terjemahan="Kamu (lk)">أَنْتَ</span>
+                        <span class="kata" data-terjemahan="pergi">تَذْهَبُ</span>
+                        <span class="kata" data-terjemahan="ke">إِلَى</span>
+                        <span class="kata" data-terjemahan="perpustakaan,">الْمَكْتَبَةِ،</span>
+                        <span class="kata" data-terjemahan="dan kamu (pr)">وَأَنْتِ</span>
+                        <span class="kata" data-terjemahan="pergi">تَذْهَبِينَ</span>
+                        <span class="kata" data-terjemahan="ke">إِلَى</span>
+                        <span class="kata" data-terjemahan="dapur.">الْمَطْبَخِ.</span>
+                        <span class="kata" data-terjemahan="Dan kami">وَنَحْنُ</span>
+                        <span class="kata" data-terjemahan="bermain">نَلْعَبُ</span>
+                        <span class="kata" data-terjemahan="bersama">مَعًا</span>
+                        <span class="kata" data-terjemahan="pada">فِي</span>
+                        <span class="kata" data-terjemahan="sore hari.">الْمَسَاءِ.</span>
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Bagian Kuis Interaktif -->
+            <section id="kuis-interaktif" class="bg-white rounded-2xl shadow-lg p-6 text-center">
+                <h2 class="text-2xl font-bold mb-2">🧠 Waktunya Kuis! 🧠</h2>
+                <p class="text-gray-600 mb-6">Uji pemahamanmu dari cerita di atas!</p>
+                
+                <!-- Formulir Input Nama -->
+                <div id="form-nama" class="max-w-sm mx-auto">
+                    <div class="mb-4">
+                        <label for="input-nama" class="block text-gray-700 text-sm font-bold mb-2">Ketik Namamu Dulu Ya:</label>
+                        <input type="text" id="input-nama" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center" placeholder="Contoh: Budi">
+                    </div>
+                    <button id="tombol-utama-kuis" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform hover:scale-105 w-full">
+                        Mulai Kuis!
+                    </button>
+                </div>
 
-          <!-- Kotak untuk menampilkan terjemahan -->
-          <div
-            id="kotak-terjemahan"
-            class="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg my-4 text-center text-2xl font-bold h-20 flex items-center justify-center transition-all">
-            Arahkan kursor atau klik sebuah kata Arab...
-          </div>
+                <div id="konten-kuis" class="hidden">
+                    <p id="pertanyaan" class="text-xl font-semibold mb-4 min-h-[3rem]"></p>
+                    <div id="pilihan-jawaban" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Pilihan jawaban akan dibuat oleh JavaScript -->
+                    </div>
+                    <div id="feedback" class="mt-4 font-bold h-6"></div>
+                    <button id="tombol-selanjutnya" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full mt-4">Soal Selanjutnya</button>
+                </div>
 
-          <!-- Teks Cerita Interaktif -->
-          <div
-            id="materi-cerita"
-            class="teks-arab dir-rtl text-right leading-relaxed"
-            dir="rtl">
-            <p class="mb-4">
-              <span
-                class="kata"
-                data-terjemahan="Nama saya"
-                >اِسْمِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Muhammad."
-                >مُحَمَّدٌ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya"
-                >أَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="anak laki-laki"
-                >وَلَدٌ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="muslim."
-                >مُسْلِمٌ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Umurku"
-                >عُمُرِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="sembilan"
-                >تِسْعُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="tahun."
-                >سِنِينَ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya"
-                >أَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="di"
-                >فِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="kelas"
-                >الصَّفِّ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="keempat."
-                >الرَّابِعِ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya belajar"
-                >أَدْرُسُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="di"
-                >فِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="sekolah"
-                >مَدْرَسَةِ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="An-Nur"
-                >النُّورِ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Islam."
-                >الْإِسْلَامِيَّةِ.</span
-              >
-            </p>
-            <p class="mb-4">
-              <span
-                class="kata"
-                data-terjemahan="Saya"
-                >أَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="suka"
-                >أُحِبُّ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="sekolahku"
-                >مَدْرَسَتِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="sekali."
-                >كَثِيرًا.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Kami punya"
-                >لَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="guru-guru"
-                >مُعَلِّمُونَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="yang baik."
-                >طَيِّبُونَ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Mereka mengajari kami"
-                >يَعَلِّمُونَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="membaca"
-                >الْقِرَاءَةَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan menulis"
-                >وَالْكِتَابَةَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan menghafal"
-                >وَحِفْظَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Al-Qur'an."
-                >الْقُرْآنِ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya punya"
-                >عِنْدِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="banyak"
-                >كَثِيرٌ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="teman-teman,"
-                >مِنَ الْأَصْدِقَاءِ،</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="kami bermain"
-                >نَلْعَبُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan belajar"
-                >وَنَتَعَلَّمُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="bersama."
-                >مَعًا.</span
-              >
-            </p>
-            <p class="mb-4">
-              <span
-                class="kata"
-                data-terjemahan="Saya punya"
-                >لِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="keluarga"
-                >أُسْرَةٌ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="yang bahagia."
-                >سَعِيدَةٌ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Ayahku"
-                >أَبِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="seorang insinyur,"
-                >مُهَنْدِسٌ،</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan dia"
-                >وَهُوَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="bekerja"
-                >يَعْمَلُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="di"
-                >فِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="kota."
-                >الْمَدِينَةِ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Ibuku"
-                >أُمِّي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="ibu rumah tangga,"
-                >رَبَّةُ بَيْتٍ،</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dia memasak"
-                >تَطْبُخُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="untuk kami"
-                >لَنَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="makanan"
-                >طَعَامًا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="yang lezat."
-                >لَذِيذًا.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya punya"
-                >لِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="saudari"
-                >أُخْتٌ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="perempuan kecil,"
-                >صَغِيرَةٌ،</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan namanya"
-                >وَاسْمُهَا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Fatimah,"
-                >فَاطِمَةُ،</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dia"
-                >هِيَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="pintar"
-                >ذَكِيَّةٌ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan ceria."
-                >وَمَرِحَةٌ.</span
-              >
-            </p>
-            <p class="mb-4">
-              <span
-                class="kata"
-                data-terjemahan="Saya suka"
-                >أُحِبُّ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="sepak bola"
-                >كُرَةَ الْقَدَمِ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan menggambar."
-                >وَالرَّسْمَ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Terkadang"
-                >أَحْيَانًا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="saya menggambar"
-                >أَرْسُمُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="rumah-rumah"
-                >الْبُيُوتَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan pohon-pohon"
-                >وَالْأَشْجَارَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan gunung-gunung."
-                >وَالْجِبَالَ.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya suka"
-                >أُحِبُّ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="juga"
-                >أَيْضًا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="membaca"
-                >قِرَاءَةَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="kisah-kisah"
-                >قِصَصِ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="para nabi."
-                >الْأَنْبِيَاءِ.</span
-              >
-            </p>
-            <p>
-              <span
-                class="kata"
-                data-terjemahan="Cita-citaku"
-                >حُلْمِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="adalah menjadi"
-                >أَنْ أُصْبِحَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="seorang dokter."
-                >طَبِيبًا.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya ingin"
-                >أُرِيدُ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="membantu"
-                >أَنْ أُسَاعِدَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="orang-orang"
-                >النَّاسَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan mengobati"
-                >وَأُعَالِجَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="orang sakit."
-                >الْمَرْضَى.</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="Saya berdoa"
-                >أَدْعُو</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="kepada Allah"
-                >اللهَ</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="agar memberiku kesuksesan"
-                >أَنْ يُوَفِّقَنِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="dan menjadikanku"
-                >وَيَجْعَلَنِي</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="bermanfaat"
-                >نَافِعًا</span
-              >
-              <span
-                class="kata"
-                data-terjemahan="bagi manusia."
-                >لِلنَّاسِ.</span
-              >
-            </p>
-          </div>
-        </section>
-
-        <!-- Bagian Kuis Interaktif -->
-        <section
-          id="kuis-interaktif"
-          class="bg-white rounded-2xl shadow-lg p-6 text-center">
-          <h2 class="text-2xl font-bold mb-2">🧠 Waktunya Kuis! 🧠</h2>
-          <p class="text-gray-600 mb-6">Uji pemahamanmu dari cerita di atas!</p>
-
-          <div id="konten-kuis">
-            <p
-              id="pertanyaan"
-              class="text-xl font-semibold mb-4 min-h-[3rem]"></p>
-            <div
-              id="pilihan-jawaban"
-              class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- Pilihan jawaban akan dibuat oleh JavaScript -->
-            </div>
-            <div
-              id="feedback"
-              class="mt-4 font-bold h-6"></div>
-          </div>
-
-          <div
-            id="hasil-kuis"
-            class="hidden">
-            <h3 class="text-2xl font-bold text-green-500">🎉 Hebat Sekali! 🎉</h3>
-            <p
-              id="teks-skor"
-              class="text-lg mt-2 mb-4"></p>
-            <button
-              id="tombol-ulangi"
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-all">
-              Ulangi Kuis
-            </button>
-          </div>
-
-          <button
-            id="tombol-utama-kuis"
-            class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg mt-4 transition-transform hover:scale-105">
-            Mulai Kuis!
-          </button>
-        </section>
-      </main>
-
-      <footer class="text-center mt-8 text-gray-500">
-        <p>Dibuat dengan ❤️ untuk pembelajaran yang menyenangkan.</p>
-      </footer>
+                <div id="hasil-kuis" class="hidden">
+                     <h3 class="text-2xl font-bold text-green-500">🎉 Hebat Sekali! 🎉</h3>
+                     <p id="teks-skor" class="text-lg mt-2 mb-4"></p>
+                     <p id="status-simpan" class="text-gray-600 italic h-6"></p>
+                     <button id="tombol-ulangi" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-all mt-4">
+                        Ulangi Kuis
+                     </button>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-8 text-gray-500">
+            <p>Dibuat dengan ❤️ untuk pembelajaran yang menyenangkan.</p>
+        </footer>
     </div>
 
     <script>
-      // --- Bagian Logika untuk Terjemahan Interaktif ---
+        // --- Bagian Logika untuk Terjemahan Interaktif ---
+        
+        const semuaKata = document.querySelectorAll('.kata');
+        const kotakTerjemahan = document.getElementById('kotak-terjemahan');
+        let kataYangAktif = null;
 
-      const semuaKata = document.querySelectorAll(".kata");
-      const kotakTerjemahan = document.getElementById("kotak-terjemahan");
-      let kataTerakhir;
+        semuaKata.forEach(kata => {
+            // Untuk desktop (hover)
+            kata.addEventListener('mouseenter', () => {
+                kotakTerjemahan.textContent = kata.dataset.terjemahan;
+                kata.classList.add('highlight');
+            });
+            kata.addEventListener('mouseleave', () => {
+                // Hanya hapus highlight jika bukan kata yang sedang di-klik
+                if (kata !== kataYangAktif) {
+                    kata.classList.remove('highlight');
+                }
+                // Kembalikan teks ke default jika tidak ada kata yang di-klik
+                if (kataYangAktif === null) {
+                    kotakTerjemahan.textContent = 'Arahkan kursor atau klik sebuah kata Arab...';
+                } else {
+                    // Jika ada, tampilkan terjemahan dari kata yang di-klik
+                    kotakTerjemahan.textContent = kataYangAktif.dataset.terjemahan;
+                }
+            });
 
-      semuaKata.forEach((kata) => {
-        // Menampilkan terjemahan saat kursor mouse di atas kata
-        kata.addEventListener("mouseenter", () => {
-          const terjemahan = kata.dataset.terjemahan;
-          kotakTerjemahan.textContent = terjemahan;
+            // Untuk mobile (klik/tap)
+            kata.addEventListener('click', () => {
+                // Jika ada kata lain yang sedang aktif, hapus highlight-nya
+                if (kataYangAktif && kataYangAktif !== kata) {
+                    kataYangAktif.classList.remove('highlight');
+                }
+                
+                // Toggle highlight pada kata yang di-klik
+                kata.classList.toggle('highlight');
+
+                // Jika setelah di-toggle kata tersebut memiliki highlight, ia menjadi kata aktif
+                if (kata.classList.contains('highlight')) {
+                    kataYangAktif = kata;
+                    kotakTerjemahan.textContent = kata.dataset.terjemahan;
+                } else {
+                    // Jika highlight-nya dihapus, tidak ada kata yang aktif
+                    kataYangAktif = null;
+                    kotakTerjemahan.textContent = 'Arahkan kursor atau klik sebuah kata Arab...';
+                }
+            });
         });
 
-        // Memberi highlight saat kata di-klik
-        kata.addEventListener("click", () => {
-          if (kataTerakhir) {
-            kataTerakhir.classList.remove("highlight");
-          }
-          kata.classList.add("highlight");
-          kataTerakhir = kata;
-        });
-      });
+        // --- Bagian Logika untuk Kuis Interaktif ---
 
-      // --- Bagian Logika untuk Kuis Interaktif ---
-
-      const questions = [
-        {
-          pertanyaan: "Siapa nama anak laki-laki dalam cerita?",
-          pilihan: ["Fatimah", "Ahmad", "Muhammad", "Ali"],
-          jawaban: "Muhammad",
-        },
-        {
-          pertanyaan: "Berapa umur Muhammad?",
-          pilihan: ["7 tahun", "8 tahun", "9 tahun", "10 tahun"],
-          jawaban: "9 tahun",
-        },
-        {
-          pertanyaan: "Apa pekerjaan ayah Muhammad?",
-          pilihan: ["Dokter", "Insinyur", "Guru", "Pedagang"],
-          jawaban: "Insinyur",
-        },
-        {
-          pertanyaan: "Apa hobi Muhammad selain sepak bola?",
-          pilihan: ["Memasak", "Membaca buku", "Menyanyi", "Menggambar"],
-          jawaban: "Menggambar",
-        },
-        {
-          pertanyaan: "Apa cita-cita Muhammad ketika besar nanti?",
-          pilihan: ["Menjadi Guru", "Menjadi Polisi", "Menjadi Dokter", "Menjadi Insinyur"],
-          jawaban: "Menjadi Dokter",
-        },
-      ];
-
-      const kontenKuis = document.getElementById("konten-kuis");
-      const hasilKuis = document.getElementById("hasil-kuis");
-      const pertanyaanEl = document.getElementById("pertanyaan");
-      const pilihanJawabanEl = document.getElementById("pilihan-jawaban");
-      const feedbackEl = document.getElementById("feedback");
-      const tombolUtama = document.getElementById("tombol-utama-kuis");
-      const tombolUlangi = document.getElementById("tombol-ulangi");
-      const teksSkorEl = document.getElementById("teks-skor");
-
-      let pertanyaanSekarangIndex = 0;
-      let skor = 0;
-      let kuisBerjalan = false;
-
-      function mulaiKuis() {
-        kuisBerjalan = true;
-        pertanyaanSekarangIndex = 0;
-        skor = 0;
-        kontenKuis.style.display = "block";
-        hasilKuis.style.display = "none";
-        tombolUtama.textContent = "Soal Selanjutnya";
-        tombolUtama.style.display = "none"; // Sembunyikan tombol 'Selanjutnya' dulu
-        tampilkanPertanyaan();
-      }
-
-      function tampilkanPertanyaan() {
-        feedbackEl.textContent = "";
-        const dataPertanyaan = questions[pertanyaanSekarangIndex];
-        pertanyaanEl.textContent = dataPertanyaan.pertanyaan;
-        pilihanJawabanEl.innerHTML = "";
-
-        dataPertanyaan.pilihan.forEach((pilihan) => {
-          const tombol = document.createElement("button");
-          tombol.textContent = pilihan;
-          tombol.classList.add("tombol-pilihan", "bg-white", "hover:bg-gray-100", "border-2", "border-gray-300", "font-semibold", "py-3", "px-4", "rounded-lg");
-          tombol.addEventListener("click", () => periksaJawaban(pilihan, tombol));
-          pilihanJawabanEl.appendChild(tombol);
-        });
-      }
-
-      function periksaJawaban(jawabanTerpilih, tombol) {
-        const jawabanBenar = questions[pertanyaanSekarangIndex].jawaban;
-        const semuaTombol = pilihanJawabanEl.querySelectorAll("button");
-
-        // Menonaktifkan semua tombol setelah menjawab
-        semuaTombol.forEach((btn) => (btn.disabled = true));
-
-        if (jawabanTerpilih === jawabanBenar) {
-          skor++;
-          feedbackEl.textContent = "Benar! 🎉";
-          feedbackEl.style.color = "#22c55e"; // Hijau
-          tombol.classList.add("benar");
-        } else {
-          feedbackEl.textContent = `Salah! Jawaban yang benar adalah "${jawabanBenar}"`;
-          feedbackEl.style.color = "#ef4444"; // Merah
-          tombol.classList.add("salah");
-          // Tandai jawaban yang benar
-          semuaTombol.forEach((btn) => {
-            if (btn.textContent === jawabanBenar) {
-              btn.classList.add("benar");
+        const questions = [
+            {
+                pertanyaan: "Siapa nama tokoh \"saya\" dalam cerita?",
+                pilihan: ["Khalid", "Fatimah", "Ahmad", "Ali"],
+                jawaban: "Ahmad"
+            },
+            {
+                pertanyaan: "Apa yang dilakukan Ahmad di pagi hari?",
+                pilihan: ["Membaca buku", "Menulis di buku tulis", "Bermain bola", "Pergi ke dapur"],
+                jawaban: "Menulis di buku tulis"
+            },
+            {
+                pertanyaan: "Siapa yang membaca buku di dalam kelas?",
+                pilihan: ["Ahmad", "Fatimah", "Ibu", "Khalid"],
+                jawaban: "Khalid"
+            },
+            {
+                pertanyaan: "Di mana Fatimah menulis?",
+                pilihan: ["Di buku", "Di dinding", "Di papan tulis", "Di meja"],
+                jawaban: "Di papan tulis"
+            },
+            {
+                pertanyaan: "Setelah dari sekolah, Ahmad pergi ke...?",
+                pilihan: ["Perpustakaan", "Dapur", "Rumah", "Taman"],
+                jawaban: "Rumah"
+            },
+            {
+                pertanyaan: "Siapakah yang pergi ke perpustakaan?",
+                pilihan: ["Fatimah", "Ahmad", "Khalid", "Ayah"],
+                jawaban: "Khalid"
+            },
+            {
+                pertanyaan: "Fatimah pergi ke ... setelah dari sekolah.",
+                pilihan: ["Rumah", "Dapur", "Kamar", "Perpustakaan"],
+                jawaban: "Dapur"
+            },
+            {
+                pertanyaan: "Kapan mereka bermain bersama?",
+                pilihan: ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"],
+                jawaban: "Sore hari"
+            },
+            {
+                pertanyaan: "Kata \"نَحْنُ\" artinya adalah...",
+                pilihan: ["Saya", "Kamu", "Dia", "Kami"],
+                jawaban: "Kami"
+            },
+            {
+                pertanyaan: "Apa yang dilakukan Fatimah?",
+                pilihan: ["تَقْرَأُ (Membaca)", "تَكْتُبِينَ (Menulis)", "تَذْهَبُ (Pergi)", "تَلْعَبُ (Bermain)"],
+                jawaban: "تَكْتُبِينَ (Menulis)"
             }
-          });
+        ];
+
+        const formNama = document.getElementById('form-nama');
+        const inputNama = document.getElementById('input-nama');
+        const kontenKuis = document.getElementById('konten-kuis');
+        const hasilKuis = document.getElementById('hasil-kuis');
+        const pertanyaanEl = document.getElementById('pertanyaan');
+        const pilihanJawabanEl = document.getElementById('pilihan-jawaban');
+        const feedbackEl = document.getElementById('feedback');
+        const tombolUtama = document.getElementById('tombol-utama-kuis');
+        const tombolSelanjutnya = document.getElementById('tombol-selanjutnya');
+        const tombolUlangi = document.getElementById('tombol-ulangi');
+        const teksSkorEl = document.getElementById('teks-skor');
+        const statusSimpanEl = document.getElementById('status-simpan');
+
+        let pertanyaanSekarangIndex = 0;
+        let skor = 0;
+        let namaSiswa = '';
+
+        function mulaiKuis() {
+            namaSiswa = inputNama.value.trim();
+            if (namaSiswa === '') {
+                // Menggunakan kotak dialog kustom, bukan alert()
+                tampilkanPesan('Harap isi namamu terlebih dahulu ya!');
+                return;
+            }
+
+            formNama.style.display = 'none';
+            pertanyaanSekarangIndex = 0;
+            skor = 0;
+            kontenKuis.style.display = 'block';
+            hasilKuis.style.display = 'none';
+            tombolSelanjutnya.style.display = 'none';
+            tampilkanPertanyaan();
         }
 
-        tombolUtama.style.display = "inline-block"; // Tampilkan tombol 'Selanjutnya'
-      }
-
-      function soalSelanjutnya() {
-        pertanyaanSekarangIndex++;
-        if (pertanyaanSekarangIndex < questions.length) {
-          tampilkanPertanyaan();
-          tombolUtama.style.display = "none"; // Sembunyikan lagi
-        } else {
-          tampilkanHasil();
+        function tampilkanPertanyaan() {
+            feedbackEl.textContent = '';
+            // Acak urutan pertanyaan agar lebih bervariasi
+            // shuffleArray(questions); // Baris ini bisa diaktifkan jika ingin soal diacak setiap kali
+            const dataPertanyaan = questions[pertanyaanSekarangIndex];
+            pertanyaanEl.textContent = dataPertanyaan.pertanyaan;
+            
+            pilihanJawabanEl.innerHTML = '';
+            // Acak juga urutan pilihan jawaban
+            const pilihanAcak = [...dataPertanyaan.pilihan];
+            // shuffleArray(pilihanAcak); // Baris ini bisa diaktifkan jika ingin pilihan diacak
+            
+            pilihanAcak.forEach(pilihan => {
+                const tombol = document.createElement('button');
+                tombol.textContent = pilihan;
+                tombol.classList.add('tombol-pilihan', 'bg-white', 'hover:bg-gray-100', 'border-2', 'border-gray-300', 'font-semibold', 'py-3', 'px-4', 'rounded-lg');
+                tombol.addEventListener('click', () => periksaJawaban(pilihan, tombol));
+                pilihanJawabanEl.appendChild(tombol);
+            });
         }
-      }
+        
+        function periksaJawaban(pilihanTerpilih, tombolTerpilih) {
+            const jawabanBenar = questions[pertanyaanSekarangIndex].jawaban;
+            
+            // Nonaktifkan semua tombol setelah menjawab
+            const semuaTombolPilihan = pilihanJawabanEl.querySelectorAll('.tombol-pilihan');
+            semuaTombolPilihan.forEach(tombol => {
+                tombol.disabled = true;
+                // Tampilkan jawaban yang benar
+                if (tombol.textContent === jawabanBenar) {
+                    tombol.classList.add('benar');
+                }
+            });
 
-      function tampilkanHasil() {
-        kontenKuis.style.display = "none";
-        hasilKuis.style.display = "block";
-        tombolUtama.style.display = "none";
-        teksSkorEl.textContent = `Kamu berhasil menjawab ${skor} dari ${questions.length} soal dengan benar!`;
-      }
+            if (pilihanTerpilih === jawabanBenar) {
+                skor++;
+                feedbackEl.textContent = 'Jawabanmu Benar! 👍';
+                feedbackEl.style.color = '#22c55e'; // Hijau
+                tombolTerpilih.classList.add('benar');
+            } else {
+                feedbackEl.textContent = 'Kurang Tepat, Coba Lagi Nanti!';
+                feedbackEl.style.color = '#ef4444'; // Merah
+                tombolTerpilih.classList.add('salah');
+            }
 
-      tombolUtama.addEventListener("click", () => {
-        if (!kuisBerjalan) {
-          mulaiKuis();
-        } else {
-          soalSelanjutnya();
+            tombolSelanjutnya.style.display = 'inline-block';
         }
-      });
+        
+        function soalSelanjutnya() {
+            pertanyaanSekarangIndex++;
+            if (pertanyaanSekarangIndex < questions.length) {
+                tampilkanPertanyaan();
+                tombolSelanjutnya.style.display = 'none';
+            } else {
+                tampilkanHasil();
+            }
+        }
 
-      tombolUlangi.addEventListener("click", mulaiKuis);
+        function tampilkanHasil() {
+            kontenKuis.style.display = 'none';
+            hasilKuis.style.display = 'block';
+            tombolSelanjutnya.style.display = 'none';
+            teksSkorEl.textContent = `${namaSiswa}, kamu berhasil menjawab ${skor} dari ${questions.length} soal dengan benar!`;
+            kirimDataKeSheet();
+        }
+
+        async function kirimDataKeSheet() {
+            // FUNGSI INI TIDAK DIUBAH, HANYA FOKUS PADA TAMPILAN DAN VARIASI KUIS
+            const scriptURL = 'MASUKKAN_URL_SCRIPT_DI_SINI'; 
+            
+            const formData = new FormData();
+            formData.append('nama', namaSiswa);
+            formData.append('skor', skor);
+            formData.append('total', questions.length);
+            
+            if (scriptURL === 'MASUKKAN_URL_SCRIPT_DI_SINI') {
+                statusSimpanEl.textContent = "Mode Latihan (Hasil tidak disimpan).";
+                console.log({nama: namaSiswa, skor: skor});
+                return;
+            }
+
+            statusSimpanEl.textContent = 'Menyimpan hasil...';
+            try {
+                const response = await fetch(scriptURL, { method: 'POST', body: formData });
+                if (response.ok) {
+                    statusSimpanEl.textContent = 'Hasilmu berhasil disimpan! 👍';
+                } else {
+                    throw new Error('Gagal menyimpan. Coba lagi nanti.');
+                }
+            } catch (error) {
+                console.error('Error!', error.message);
+                statusSimpanEl.textContent = 'Gagal menyimpan hasil.';
+            }
+        }
+        
+        tombolUtama.addEventListener('click', mulaiKuis);
+        tombolSelanjutnya.addEventListener('click', soalSelanjutnya);
+
+        tombolUlangi.addEventListener('click', () => {
+            hasilKuis.style.display = 'none';
+            formNama.style.display = 'block';
+            // Biarkan nama tetap terisi untuk memudahkan jika ingin mengulang dengan nama yang sama
+            // inputNama.value = ''; 
+            statusSimpanEl.textContent = '';
+        });
+
     </script>
-  </body>
+</body>
 </html>
