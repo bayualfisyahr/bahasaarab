@@ -20,8 +20,12 @@
         .teks-arab {
             font-family: 'Amiri', serif;
             font-size: 1.75rem; /* Ukuran font lebih besar agar mudah dibaca */
-            line-height: 2.8rem;
         }
+        /* Menambahkan line-height lebih besar untuk menghindari tabrakan harakat */
+        .teks-cerita {
+            line-height: 3.5rem; 
+        }
+
         /* Efek saat kata Arab di-hover atau di-klik */
         .kata {
             cursor: pointer;
@@ -68,28 +72,60 @@
         
         <!-- Judul Utama -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-emerald-700">📖 Pelajaran Bahasa Arab 📖</h1>
+             <!-- Logo MDTA -->
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAA+AD4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1VZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A/v4ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/9k=" alt="Logo MDTA Daarut Tafaqquh" class="w-24 h-24 mx-auto mb-4">
+            <h1 class="text-3xl sm:text-4xl font-bold text-emerald-700">Pelajaran Bahasa Arab</h1>
             <p class="text-xl font-semibold text-gray-700 mt-2">MDTA Daarut Tafaqquh</p>
             <p class="text-md text-gray-500 mt-1">Selasa, 2 September 2025</p>
         </header>
 
         <main>
+             <!-- Bagian Petunjuk Pembelajaran -->
+            <section class="bg-white rounded-2xl shadow-lg p-6 mb-8 text-left">
+                <h2 class="text-2xl font-bold mb-4 text-emerald-600">Petunjuk Pembelajaran</h2>
+                <div class="space-y-4 text-gray-700">
+                    <p>Bismillah, anak-anak shalih dan shalihah hari ini kita akan belajar tentang <b class="font-semibold text-emerald-700">Ana (أَنَا), Anta (أَنْتَ), dan Anti (أَنْتِ)</b> dalam Bahasa Arab.</p>
+                    <ul class="list-disc list-inside space-y-1 pl-2">
+                        <li><span class="font-semibold teks-arab" dir="rtl">أَنَا (Ana)</span> artinya <span class="font-semibold">Saya</span>, digunakan untuk laki-laki dan perempuan.</li>
+                        <li><span class="font-semibold teks-arab" dir="rtl">أَنْتَ (Anta)</span> artinya <span class="font-semibold">Kamu</span>, digunakan untuk laki-laki.</li>
+                        <li><span class="font-semibold teks-arab" dir="rtl">أَنْتِ (Anti)</span> artinya <span class="font-semibold">Kamu</span>, digunakan untuk perempuan.</li>
+                    </ul>
+                    <hr class="my-4">
+                    <p class="font-semibold">Di bawah ini ada Teks Bacaan. Tugas kalian anak-anak shalih dan shalihah adalah:</p>
+                    <ol class="list-decimal list-inside space-y-2 pl-2">
+                        <li>Baca dengan lantang tulisan di bawah ini, kemudian ulangi sebanyak 3-5 kali.</li>
+                        <li>Setelah dibaca seluruh paragrafnya, klik setiap kata di bawahnya ya, nanti akan muncul terjemahnya.</li>
+                        <li>Kemudian baca lagi dengan lantang kata dan terjemahnya itu.</li>
+                    </ol>
+                     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-r-lg mt-4">
+                        <p class="font-bold">⭐ Tugas:</p>
+                        <p>Jika kamu sudah selesai membaca setiap kata, sekarang tuliskan semua terjemahnya di buku sehingga menjadi cerita yang lengkap, lalu foto dan kirimkan hasil pekerjaannya ke WhatsApp ustadz Bayu ya!</p>
+                    </div>
+                     <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mt-4">
+                        <p class="font-bold">💡 Latihan:</p>
+                        <p>Untuk melatih pemahamanmu, di bawah ini ada latihan-latihan. Jika kamu salah, kamu masih bisa memperbaiki dan meneruskannya (tapi tidak dihitung sebagai poin).</p>
+                    </div>
+                    <p class="text-center font-semibold text-lg pt-4 text-emerald-600">Selamat belajar anak-anak shalih dan shalihah! :)</p>
+                </div>
+            </section>
+
+
             <!-- Bagian Cerita dan Terjemahan -->
             <section class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-                <h2 class="text-2xl font-bold mb-4 text-center">👇 Baca Ceritanya & Klik Kata untuk Artinya! 👇</h2>
+                <h2 class="text-2xl font-bold mb-4 text-center">Teks Bacaan</h2>
                 
                 <!-- Kotak untuk menampilkan terjemahan -->
-                <div id="kotak-terjemahan" class="bg-amber-100 border-l-4 border-amber-400 text-amber-800 p-4 rounded-lg my-4 text-center text-2xl font-bold h-20 flex items-center justify-center transition-all">
+                <div id="kotak-terjemahan" class="bg-amber-100 border-l-4 border-amber-400 text-amber-800 p-4 rounded-lg my-4 text-center font-bold h-20 flex items-center justify-center transition-all text-xl md:text-2xl">
                     Arahkan kursor atau klik sebuah kata Arab...
                 </div>
                 
                 <!-- Teks Cerita Interaktif -->
-                <div id="materi-cerita" class="teks-arab dir-rtl text-right leading-relaxed" dir="rtl">
-                    <p class="mb-4">
+                <div id="materi-cerita" class="teks-arab teks-cerita dir-rtl text-right" dir="rtl">
+                    <p class="mb-6 md:mb-4">
                         <span class="kata" data-terjemahan="Kami">نَحْنُ</span>
                         <span class="kata" data-terjemahan="keluarga">أُسْرَةٌ</span>
                         <span class="kata" data-terjemahan="yang bahagia.">سَعِيدَةٌ.</span>
-                        <span class="kata" data-terjemahan="Nama saya">اسْمِي</span>
+                        <span class="kata" data-terjemahan="Nama saya">اِسْمِي</span>
                         <span class="kata" data-terjemahan="Ahmad,">أَحْمَدُ،</span>
                         <span class="kata" data-terjemahan="saudara laki-lakiku">أَخِي</span>
                         <span class="kata" data-terjemahan="namanya">اسْمُهُ</span>
@@ -98,7 +134,7 @@
                         <span class="kata" data-terjemahan="namanya">اسْمُهَا</span>
                         <span class="kata" data-terjemahan="Fatimah.">فَاطِمَةُ.</span>
                     </p>
-                    <p class="mb-4">
+                    <p class="mb-6 md:mb-4">
                         <span class="kata" data-terjemahan="Di">فِي</span>
                         <span class="kata" data-terjemahan="pagi hari">الصَّبَاحِ</span>
                         <span class="kata" data-terjemahan="saya">أَنَا</span>
@@ -144,17 +180,18 @@
             
             <!-- Bagian Kuis Interaktif -->
             <section id="kuis-interaktif" class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <h2 id="judul-kuis" class="text-2xl font-bold mb-2">🧠 Waktunya Kuis! 🧠</h2>
+                <h2 id="judul-kuis" class="text-2xl font-bold mb-2">Waktunya Latihan!</h2>
                 <p id="deskripsi-kuis" class="text-gray-600 mb-6">Uji pemahamanmu dari cerita di atas!</p>
                 
                 <!-- Formulir Input Nama -->
                 <div id="form-nama" class="max-w-sm mx-auto">
                     <div class="mb-4">
-                        <label for="input-nama" class="block text-gray-700 text-sm font-bold mb-2">Ketik Namamu di sini:</label>
+                        <label for="input-nama" class="block text-gray-700 text-sm font-bold mb-2">Ketik Namamu Dulu Ya:</label>
                         <input type="text" id="input-nama" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center" placeholder="Contoh: Zaidan">
+                         <p id="error-nama" class="text-red-500 text-sm italic mt-2 hidden">Nama tidak boleh kosong!</p>
                     </div>
                     <button id="tombol-utama-kuis" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform hover:scale-105 w-full">
-                        Mulai Kuis!
+                        Mulai Latihan!
                     </button>
                 </div>
                 
@@ -192,18 +229,17 @@
 
                 <!-- Hasil Akhir Kuis -->
                 <div id="hasil-kuis" class="hidden">
-                     <h3 class="text-2xl font-bold text-emerald-500">🎉 Hebat Sekali! 🎉</h3>
+                     <h3 class="text-2xl font-bold text-emerald-500">Hebat Sekali!</h3>
                      <p id="teks-skor" class="text-lg mt-2 mb-4"></p>
-                     <p id="status-simpan" class="text-gray-600 italic h-6"></p>
                      <button id="tombol-ulangi" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition-all mt-4">
-                        Ulangi Kuis
+                        Ulangi Latihan
                      </button>
                 </div>
             </section>
         </main>
         
         <footer class="text-center mt-8 text-gray-500 italic">
-            <p>Semoga Allah menambahkan ilmu kepada kita dan memberikan karunia-Nya kepada kita untuk memahaminya. Aamiin.<br>Barakallahu fiikum..</p>
+            <p>Semoga Allah menambahkan ilmu kepada kita dan menganugerahkan kepada kita semua kepahaman. Aamiin.<br>Barakallahu fiikum..</p>
         </footer>
     </div>
 
@@ -264,11 +300,11 @@
         // Elemen DOM
         const formNama = document.getElementById('form-nama');
         const inputNama = document.getElementById('input-nama');
+        const errorNama = document.getElementById('error-nama');
         const tombolUtama = document.getElementById('tombol-utama-kuis');
         const hasilKuis = document.getElementById('hasil-kuis');
         const tombolUlangi = document.getElementById('tombol-ulangi');
         const teksSkorEl = document.getElementById('teks-skor');
-        const statusSimpanEl = document.getElementById('status-simpan');
         const navigasiKuis = document.getElementById('navigasi-kuis');
         const feedbackEl = document.getElementById('feedback');
         const tombolSelanjutnya = document.getElementById('tombol-selanjutnya');
@@ -293,9 +329,13 @@
         function mulaiKuis() {
             namaSiswa = inputNama.value.trim();
             if (namaSiswa === '') {
-                alert('Harap isi namamu terlebih dahulu ya!');
+                inputNama.classList.add('border-red-500');
+                errorNama.classList.remove('hidden');
                 return;
             }
+            inputNama.classList.remove('border-red-500');
+            errorNama.classList.add('hidden');
+
             formNama.style.display = 'none';
             hasilKuis.classList.add('hidden');
             kontainerSemuaKuis.style.display = 'block';
@@ -322,7 +362,7 @@
             }
 
             const alurAktif = alurKuis[alurSekarangIndex];
-            judulKuisEl.textContent = `🧠 Kuis: ${alurAktif.tipe} 🧠`;
+            judulKuisEl.textContent = `Latihan: ${alurAktif.tipe}`;
 
             if (alurAktif.tipe === 'Pilihan Ganda') {
                 deskripsiKuisEl.textContent = "Pilihlah jawaban yang paling benar!";
@@ -351,7 +391,7 @@
 
                 if(benar) skor++;
                 
-                feedbackEl.textContent = benar ? 'Jawabanmu Benar! 👍' : 'Kurang Tepat!';
+                feedbackEl.textContent = benar ? 'Jawabanmu Benar!' : 'Kurang Tepat, yuk coba lagi!';
                 feedbackEl.style.color = benar ? '#059669' : '#ef4444';
                 tombolSelanjutnya.textContent = 'Soal Selanjutnya';
                 return;
@@ -486,10 +526,9 @@
             kontainerSemuaKuis.style.display = 'none';
             navigasiKuis.style.display = 'none';
             hasilKuis.classList.remove('hidden');
-            judulKuisEl.textContent = '🎉 Selesai! 🎉';
+            judulKuisEl.textContent = 'Latihan Selesai!';
             deskripsiKuisEl.textContent = "Lihat skormu di bawah ini."
             teksSkorEl.textContent = `${namaSiswa}, kamu dapat skor ${skor} dari ${totalSoal} soal!`;
-            // Di sini Anda bisa menambahkan kembali fungsi kirimDataKeSheet jika diperlukan
         }
 
         tombolUtama.addEventListener('click', mulaiKuis);
@@ -497,7 +536,7 @@
         tombolUlangi.addEventListener('click', () => {
             hasilKuis.classList.add('hidden');
             formNama.style.display = 'block';
-            judulKuisEl.textContent = '🧠 Waktunya Kuis! 🧠';
+            judulKuisEl.textContent = 'Waktunya Latihan!';
             deskripsiKuisEl.textContent = 'Uji pemahamanmu dari cerita di atas!';
         });
 
