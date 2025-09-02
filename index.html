@@ -79,7 +79,7 @@
         <header class="text-center mb-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-sky-700">Pelajaran Bahasa Arab</h1>
             <p class="text-xl font-semibold text-gray-700 mt-2">MDTA Daarut Tafaqquh</p>
-            <p class="text-md text-gray-500 mt-1">Selasa, 2 September 2025</p>
+            <p class="text-md text-gray-500 mt-1">Rabu, 3 September 2025</p>
             <p class="text-md text-gray-500 mt-1">Pengajar: Ustadz Bayu</p>
         </header>
 
@@ -199,7 +199,7 @@
                 <!-- Formulir Input Nama -->
                 <div id="form-nama" class="max-w-sm mx-auto">
                     <div class="mb-4">
-                        <label for="input-nama" class="block text-gray-700 text-sm font-bold mb-2">Ketik Namamu Dulu Ya:</label>
+                        <label for="input-nama" class="block text-gray-700 text-sm font-bold mb-2">Ketik Namamu di sini:</label>
                         <input type="text" id="input-nama" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center" placeholder="Contoh: Zaidan">
                          <p id="error-nama" class="text-red-500 text-sm italic mt-2 hidden">Nama tidak boleh kosong!</p>
                     </div>
@@ -294,7 +294,8 @@
         
         const dataSusunKalimat = [
             { kalimatBenar: ["أَنَا", "أَكْتُبُ", "فِي", "دَفْتَرِي"], acak: ["فِي", "أَكْتُبُ", "دَفْتَرِي", "أَنَا"] },
-            { kalimatBenar: ["خَالِدٌ", "يَقْرَأُ", "كِتَابًا"], acak: ["كِتَابًا", "خَالِدٌ", "يَقْرَأُ"] },
+            // Soal diubah agar sesuai dengan materi Anti
+            { kalimatBenar: ["أَنْتِ", "تَكْتُبِينَ", "عَلَى", "السَّبُّورَةِ"], acak: ["عَلَى", "السَّبُّورَةِ", "أَنْتِ", "تَكْتُبِينَ"] },
         ];
 
         const dataJodohkanKata = [
@@ -335,8 +336,8 @@
         let pertanyaanSekarangIndex = 0;
         let skor = 0;
         let namaSiswa = '';
-        // Perbaikan: Kuis Jodohkan Kata dihitung sebagai 1 soal, bukan 5
-        let totalSoal = dataPilihanGanda.length + dataSusunKalimat.length + 1;
+        // Perbaikan: Kuis Jodohkan Kata dihitung 1 poin per kata
+        let totalSoal = dataPilihanGanda.length + dataSusunKalimat.length + dataJodohkanKata.length;
 
         // --- FUNGSI UTAMA KUIS ---
         
@@ -399,11 +400,26 @@
             // Tahap Pengecekan
             if (tombolSelanjutnya.textContent === 'Periksa Jawaban') {
                 let benar = false;
-                if (alurAktif.tipe === 'Pilihan Ganda') benar = periksaPilihanGanda();
-                if (alurAktif.tipe === 'Susun Kalimat') benar = periksaSusunKalimat();
-                if (alurAktif.tipe === 'Jodohkan Kata') benar = periksaJodohkanKata();
-
-                if(benar) skor++;
+                
+                // --- AWAL PERUBAHAN LOGIKA SKOR ---
+                if (alurAktif.tipe === 'Pilihan Ganda') {
+                    benar = periksaPilihanGanda();
+                    if (benar) {
+                        skor++;
+                    }
+                } else if (alurAktif.tipe === 'Susun Kalimat') {
+                    benar = periksaSusunKalimat();
+                    if (benar) {
+                        skor++;
+                    }
+                } else if (alurAktif.tipe === 'Jodohkan Kata') {
+                    benar = periksaJodohkanKata();
+                    if (benar) {
+                        // Jika semua terjodohkan, tambahkan skor sejumlah kata yang ada
+                        skor += dataJodohkanKata.length;
+                    }
+                }
+                // --- AKHIR PERUBAHAN LOGIKA SKOR ---
                 
                 feedbackEl.textContent = benar ? 'Jawabanmu Benar!' : 'Kurang Tepat, yuk coba lagi!';
                 feedbackEl.style.color = benar ? '#059669' : '#ef4444';
@@ -470,6 +486,9 @@
                 kataEl.classList.add('kata-susun', 'teks-arab', 'bg-gray-200', 'p-2', 'rounded-lg');
                 kataEl.onclick = () => {
                     kalimatTersusunEl.appendChild(kataEl);
+                    // Tambahkan warna latar belakang saat kata dipindahkan
+                    kataEl.classList.remove('bg-gray-200');
+                    kataEl.classList.add('bg-sky-200');
                 };
                 bankKataEl.appendChild(kataEl);
             });
@@ -523,8 +542,13 @@
                     pilihanJodohan.indonesia.classList.add('salah');
                 }
                 setTimeout(() => {
-                    pilihanJodohan.arab.classList.remove('terpilih', 'salah');
-                    pilihanJodohan.indonesia.classList.remove('terpilih', 'salah');
+                    // FIX: Check if elements still exist before changing classList
+                    if (pilihanJodohan.arab) {
+                        pilihanJodohan.arab.classList.remove('terpilih', 'salah');
+                    }
+                    if (pilihanJodohan.indonesia) {
+                        pilihanJodohan.indonesia.classList.remove('terpilih', 'salah');
+                    }
                     pilihanJodohan = { arab: null, indonesia: null };
                 }, 500);
             }
@@ -542,7 +566,13 @@
             hasilKuis.classList.remove('hidden');
             judulKuisEl.textContent = 'Latihan Selesai!';
             deskripsiKuisEl.textContent = "Lihat skormu di bawah ini."
-            teksSkorEl.textContent = `${namaSiswa}, kamu dapat skor ${skor} dari ${totalSoal} soal!`;
+            
+            // --- AWAL PERUBAHAN TAMPILAN SKOR ---
+            const nilaiKonversi = totalSoal > 0 ? Math.round((skor / totalSoal) * 100) : 0;
+            teksSkorEl.innerHTML = `${namaSiswa}, kamu dapat skor <strong>${skor}</strong> dari <strong>${totalSoal}</strong> soal!
+            <br>
+            <span class="text-2xl font-bold text-sky-600 mt-2 block">Nilai Akhir: ${nilaiKonversi}</span>`;
+            // --- AKHIR PERUBAHAN TAMPILAN SKOR ---
         }
 
         tombolUtama.addEventListener('click', mulaiKuis);
