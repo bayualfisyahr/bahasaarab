@@ -259,41 +259,53 @@
         const speechSupported = 'speechSynthesis' in window;
         let arabicVoice = null;
         let speechReady = false;
+        // --- REVISI AUDIO FINAL UNTUK MOBILE ---
+        // Flag untuk memastikan audio hanya di-unlock sekali.
+        let isAudioUnlocked = false;
 
-        // --- REVISI AUDIO UNTUK MOBILE ---
-        // Browser mobile memerlukan interaksi pengguna untuk memulai audio.
-        // Fungsi ini memastikan daftar suara sudah dimuat sebelum mencoba berbicara.
         function initializeSpeechSynthesis() {
             if (speechReady || !speechSupported) return;
-
             const voices = speechSynthesis.getVoices();
             if (voices.length > 0) {
                 arabicVoice = voices.find(voice => voice.lang.startsWith('ar-'));
                 speechReady = true;
-                // Jika tidak menemukan suara Arab, setidaknya kita tahu API sudah siap.
+                console.log("Speech synthesis is ready. Arabic voice:", arabicVoice ? arabicVoice.name : "Not found");
             }
         }
-        
-        // Coba inisialisasi saat halaman dimuat
+
+        // Fungsi ini akan "membangunkan" audio context di browser mobile.
+        // Harus dipanggil oleh event klik LANGSUNG dari pengguna.
+        function unlockAudio() {
+            if (isAudioUnlocked || !speechSupported) return;
+            
+            const synth = window.speechSynthesis;
+            // Jika context dalam keadaan 'suspended', coba untuk 'resume'.
+            if (synth.state === 'suspended') {
+                synth.resume();
+            }
+            
+            // Ucapkan sesuatu yang kosong. Ini adalah trik umum untuk mengaktifkan engine.
+            const silentUtterance = new SpeechSynthesisUtterance('');
+            synth.speak(silentUtterance);
+            
+            isAudioUnlocked = true;
+            console.log("Audio context unlocked by user interaction.");
+            // Panggil inisialisasi lagi setelah interaksi, ini seringkali lebih berhasil.
+            initializeSpeechSynthesis();
+        }
+
+        // Coba inisialisasi saat halaman dimuat & saat daftar suara berubah.
         initializeSpeechSynthesis();
-        // Beberapa browser (Chrome mobile) butuh waktu untuk memuat suara, jadi kita coba lagi.
         if (speechSupported && speechSynthesis.onvoiceschanged !== undefined) {
             speechSynthesis.onvoiceschanged = initializeSpeechSynthesis;
         }
-        // Fallback jika onvoiceschanged tidak berjalan
-        setTimeout(initializeSpeechSynthesis, 250);
-
 
         function bacaTeks(teks) {
-            // Jika audio belum siap, coba inisialisasi sekali lagi.
-            // Ini penting jika pengguna berinteraksi sebelum suara sempat dimuat.
-            if (!speechReady) {
-                initializeSpeechSynthesis();
-            }
-            // Jika masih belum siap setelah dicoba, kita tidak bisa melakukan apa-apa.
             if (!speechSupported) return;
+            // Pastikan daftar suara sudah siap
+            if (!speechReady) initializeSpeechSynthesis();
 
-            speechSynthesis.cancel(); // Hentikan suara yang sedang berjalan
+            speechSynthesis.cancel();
             const ucapan = new SpeechSynthesisUtterance(teks);
             ucapan.lang = 'ar-SA';
             if (arabicVoice) ucapan.voice = arabicVoice;
@@ -304,6 +316,8 @@
 
         // --- INTERAKSI TEKS PERCAKAPAN ---
         document.getElementById('tombol-baca-cerita').addEventListener('click', () => {
+            // Panggil unlockAudio() pada interaksi pertama
+            unlockAudio(); 
             const teksLengkap = [...document.querySelectorAll('#materi-cerita .kata')].map(k => k.textContent.trim()).join(' ');
             bacaTeks(teksLengkap);
         });
@@ -312,6 +326,8 @@
         document.querySelectorAll('#materi-cerita .kata').forEach(kata => {
             const kotakTerjemahan = document.getElementById('kotak-terjemahan');
             kata.addEventListener('click', () => {
+                // Panggil unlockAudio() pada interaksi pertama
+                unlockAudio();
                 if (kataYangAktif && kataYangAktif !== kata) kataYangAktif.classList.remove('highlight');
                 kata.classList.toggle('highlight');
                 if (kata.classList.contains('highlight')) {
@@ -630,6 +646,8 @@
         }
 
         mulaiSpBtn.addEventListener('click', () => {
+            // Panggil unlockAudio() pada interaksi pertama
+            unlockAudio();
             spIndex = 0;
             logPercakapanEl.innerHTML = '';
             feedbackSpEl.textContent = '';
@@ -641,6 +659,4 @@
     </script>
 </body>
 </html>
-
-
 
