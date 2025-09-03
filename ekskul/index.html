@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ekskul Arabic: Kaifa Hāluk?</title>
+    <title>Pelajaran Bahasa Arab: Kaifa Hāluk?</title>
     <!-- Memuat Tailwind CSS untuk desain yang modern dan responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Memuat Google Fonts untuk tipografi yang menarik -->
@@ -100,9 +100,9 @@
     <div class="container mx-auto p-4 sm:p-8 max-w-4xl">
         
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-sky-700">Ekstrakulikuller Arabic</h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-700">Pelajaran Bahasa Arab</h1>
             <h2 class="text-2xl sm:text-3xl font-bold text-sky-600 teks-arab mt-2" dir="rtl">كَيْفَ حَالُكَ؟</h2>
-            <p class="text-xl font-semibold text-gray-700 mt-1">SDIT Daarut Tafaqquh</p>
+            <p class="text-xl font-semibold text-gray-700 mt-1">MDTA Daarut Tafaqquh</p>
             <p id="tanggal-pelajaran" class="text-md text-gray-500 mt-1"></p>
             <p class="text-md text-gray-500 mt-1">Pengajar: Ustadz Bayu</p>
         </header>
@@ -111,8 +111,7 @@
             <section class="kuis-card text-left">
                 <h2 class="text-2xl font-bold mb-4 text-sky-600">Petunjuk Pembelajaran</h2>
                 <div class="space-y-4 text-gray-700">
-                    <p><i>Bismillaahirrahmaanirrahiim..</i><br> Anak-anak shalih dan shalihah hari ini kita akan melanjutkan pembelajaran ke-3 dari Kitab Al Arabiyyah Baina Yadai
-                      Auladina, sekarang kita akan belajar percakapan dasar tentang <b class="font-semibold text-sky-700">Menanyakan Kabar</b> dan <b class="font-semibold text-sky-700">Menanyakan Nama</b>.</p>
+                    <p><i>Bismillaahirrahmaanirrahiim..</i><br> Anak-anak shalih dan shalihah hari ini kita akan belajar percakapan dasar tentang <b class="font-semibold text-sky-700">Menanyakan Kabar</b> dan <b class="font-semibold text-sky-700">Menanyakan Nama</b>.</p>
                     
                     <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-800 p-4 rounded-r-lg mt-4">
                         <p class="font-bold">💬 Ungkapan untuk Laki-laki (Mudzakkar):</p>
@@ -259,19 +258,42 @@
 
         const speechSupported = 'speechSynthesis' in window;
         let arabicVoice = null;
+        let speechReady = false;
 
-        function loadVoices() {
-            if (!speechSupported) return;
-            arabicVoice = speechSynthesis.getVoices().find(voice => voice.lang.startsWith('ar-'));
+        // --- REVISI AUDIO UNTUK MOBILE ---
+        // Browser mobile memerlukan interaksi pengguna untuk memulai audio.
+        // Fungsi ini memastikan daftar suara sudah dimuat sebelum mencoba berbicara.
+        function initializeSpeechSynthesis() {
+            if (speechReady || !speechSupported) return;
+
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                arabicVoice = voices.find(voice => voice.lang.startsWith('ar-'));
+                speechReady = true;
+                // Jika tidak menemukan suara Arab, setidaknya kita tahu API sudah siap.
+            }
         }
-        if (speechSupported) {
-            speechSynthesis.onvoiceschanged = loadVoices;
-            loadVoices();
+        
+        // Coba inisialisasi saat halaman dimuat
+        initializeSpeechSynthesis();
+        // Beberapa browser (Chrome mobile) butuh waktu untuk memuat suara, jadi kita coba lagi.
+        if (speechSupported && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = initializeSpeechSynthesis;
         }
+        // Fallback jika onvoiceschanged tidak berjalan
+        setTimeout(initializeSpeechSynthesis, 250);
+
 
         function bacaTeks(teks) {
+            // Jika audio belum siap, coba inisialisasi sekali lagi.
+            // Ini penting jika pengguna berinteraksi sebelum suara sempat dimuat.
+            if (!speechReady) {
+                initializeSpeechSynthesis();
+            }
+            // Jika masih belum siap setelah dicoba, kita tidak bisa melakukan apa-apa.
             if (!speechSupported) return;
-            speechSynthesis.cancel();
+
+            speechSynthesis.cancel(); // Hentikan suara yang sedang berjalan
             const ucapan = new SpeechSynthesisUtterance(teks);
             ucapan.lang = 'ar-SA';
             if (arabicVoice) ucapan.voice = arabicVoice;
@@ -619,5 +641,6 @@
     </script>
 </body>
 </html>
+
 
 
