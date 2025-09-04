@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelajaran Bahasa Arab: Shalat Lima Waktu</title>
+    <!-- Memuat Tailwind CSS untuk desain yang modern dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Google Fonts untuk tipografi yang menarik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Menambahkan gaya kustom di sini */
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Perbaikan Tampilan Teks Arab */
+        .teks-arab {
+            font-family: 'Amiri', serif;
+            font-size: 2rem; /* Ukuran font sedikit diperbesar */
+            line-height: 2.5; /* Jarak antar baris ditambah agar harakat tidak bertabrakan */
+        }
+        .teks-cerita .kata {
+            line-height: 3.5rem; /* Menjaga jarak baris khusus untuk cerita interaktif */
+        }
+
+        /* Efek saat kata Arab di-hover atau di-klik */
+        .kata {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 2px 4px;
+            border-radius: 8px;
+        }
+        .kata:hover {
+            background-color: #fef3c7;
+            transform: scale(1.05);
+        }
+        .kata.highlight {
+            background-color: #fcd34d;
+            color: #422006;
+        }
+        /* Gaya untuk tombol kuis dan elemen interaktif */
+        .tombol-pilihan, .kata-susun, .kata-jodoh, .kata-bank {
+            transition: all 0.2s ease-in-out;
+        }
+        .tombol-pilihan:hover, .kata-susun:hover, .kata-jodoh:hover:not(:disabled), .kata-bank:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .tombol-pilihan.benar, .kata-jodoh.benar, .blank-space.benar {
+            background-color: #34d399 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        .tombol-pilihan.salah, .kata-jodoh.salah, .blank-space.salah {
+            background-color: #f87171 !important;
+            color: white !important;
+            border-color: #ef4444 !important;
+        }
+        .kata-jodoh.terpilih, .kata-bank.terpilih, .blank-space.terpilih {
+            background-color: #60a5fa !important;
+            color: white !important;
+            border-color: #2563eb !important;
+        }
+        
+        .kuis-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .blank-space {
+            display: inline-block;
+            padding: 0 1rem;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            min-width: 100px;
+            text-align: center;
+        }
+        .kalimat-rumpang, #pilihan-jawaban-sp button, #bank-kata button, #kalimat-tersusun button, #pernyataan-bs {
+             font-size: 1.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-8 max-w-4xl">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-700">Pelajaran Bahasa Arab</h1>
+            <h2 class="text-2xl sm:text-3xl font-bold text-sky-600 teks-arab mt-2" dir="rtl">اَلصَّلَاةُ</h2>
+            <!-- REVISI 1: Mengubah nama sekolah -->
+            <p class="text-xl font-semibold text-gray-700 mt-1">SDIT Al Maahyrah</p>
+            <p id="tanggal-pelajaran" class="text-md text-gray-500 mt-1"></p>
+            <p class="text-md text-gray-500 mt-1">Pengajar: Ustadz Bayu</p>
+        </header>
+
+        <main>
+            <section class="kuis-card text-left">
+                <h2 class="text-2xl font-bold mb-4 text-sky-600">Ringkasan Materi</h2>
+                <div class="space-y-4 text-gray-700">
+                    <p><i>Bismillaahirrahmaanirrahiim..</i><br> Anak-anak shalih dan shalihah hari ini kita akan belajar tentang <b class="font-semibold text-sky-700">Shalat Lima Waktu</b> dalam Bahasa Arab. Perhatikan rangkuman di bawah ini ya!</p>
+                    
+                    <div class="bg-sky-100 border border-sky-200 p-4 rounded-lg mt-4">
+                        <p class="font-bold text-lg text-sky-800">Shalat Fardhu dan Jumlah Rakaatnya:</p>
+                        <ul class="list-disc list-inside space-y-3 pl-2 mt-2">
+                            <li><span class="font-semibold">Shalat Subuh (صَلَاةُ الصُّبْحِ):</span> <span class="font-semibold text-sky-700">2 Rakaat</span></li>
+                            <li><span class="font-semibold">Shalat Dzuhur (صَلَاةُ الظُّهْرِ):</span> <span class="font-semibold text-sky-700">4 Rakaat</span></li>
+                            <li><span class="font-semibold">Shalat Ashar (صَلَاةُ الْعَصْرِ):</span> <span class="font-semibold text-sky-700">4 Rakaat</span></li>
+                            <li><span class="font-semibold">Shalat Maghrib (صَلَاةُ الْمَغْرِبِ):</span> <span class="font-semibold text-sky-700">3 Rakaat</span></li>
+                            <li><span class="font-semibold">Shalat Isya (صَلَاةُ الْعِشَاءِ):</span> <span class="font-semibold text-sky-700">4 Rakaat</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="kuis-card">
+                <h2 class="text-2xl font-bold mb-4 text-center">Teks Bacaan (Qira'ah)</h2>
+                <button id="tombol-baca-cerita" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-6 rounded-full mb-4 flex items-center justify-center mx-auto transition-transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                    Dengarkan Bacaan
+                </button>
+                <div id="kotak-terjemahan" class="bg-amber-100 border-l-4 border-amber-400 text-amber-800 p-4 rounded-lg my-4 text-center font-bold h-20 flex items-center justify-center transition-all text-lg md:text-xl">
+                    Klik sebuah kalimat Arab untuk mendengar suara dan melihat artinya...
+                </div>
+                <div id="materi-cerita" class="teks-arab teks-cerita dir-rtl text-right space-y-2" dir="rtl">
+                    <p><span class="kata" data-terjemahan="Kita muslim, shalat lima waktu dalam sehari semalam.">نَحْنُ مُسْلِمُوْنَ نُصَلِّيْ خَمْسَ صَلَوَاتٍ فِي الْيَوْمِ وَاللَّيْلَةِ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Subuh, shalat Dzuhur, shalat Ashar, shalat Maghrib, dan shalat Isya.">صَلَاةُ الصُّبْحِ وَصَلَاةُ الظُّهْرِ وَصَلَاةُ الْعَصْرِ وَصَلَاةُ الْمَغْرِبِ وَصَلَاةُ الْعِشَاءِ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Subuh waktunya saat terbit fajar, dan ia dua rakaat.">صَلَاةُ الصُّبْحِ عِنْدَ طُلُوْعِ الْفَجْرِ، وَهِيَ رَكْعَتَانِ اثْنَتَانِ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Dzuhur di siang hari, dan ia empat rakaat.">صَلَاةُ الظُّهْرِ فِي النَّهَارِ، وَهِيَ أَرْبَعُ رَكَعَاتٍ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Ashar di sore hari, dan ia juga empat rakaat.">صَلَاةُ الْعَصْرِ فِي الْمَسَاءِ، وَهِيَ أَرْبَعُ رَكَعَاتٍ كَذَلِكَ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Maghrib di awal malam setelah terbenam matahari, dan ia tiga rakaat.">صَلَاةُ الْمَغْرِبِ هِيَ فِي أَوَّلِ اللَّيْلِ بَعْدَ غُرُوْبِ الشَّمْسِ، وَلَهَا ثَلَاثُ رَكَعَاتٍ.</span></p>
+                    <p><span class="kata" data-terjemahan="Shalat Isya di malam hari, sekitar satu jam setelah shalat Maghrib, dan ia empat rakaat.">صَلَاةُ الْعِشَاءِ فِي اللَّيْلِ نَحْوَ سَاعَةٍ وَاحِدَةٍ بَعْدَ صَلَاةِ الْمَغْرِبِ، وَهِيَ أَرْبَعُ رَكَعَاتٍ.</span></p>
+                </div>
+            </section>
+            
+            <h2 class="text-3xl font-bold text-center mb-4 text-sky-700">Waktunya Latihan!</h2>
+
+            <!-- LATIHAN 1: Pilihan Ganda -->
+            <section id="latihan-pg" class="kuis-card text-center">
+                <h3 class="text-xl font-bold mb-4">Latihan 1: Pilihan Ganda</h3>
+                <p class="text-gray-600 mb-6">Pilih jawaban yang paling tepat!</p>
+                <div id="konten-pilihan-ganda"></div>
+                <div id="feedback-pg" class="font-bold h-6 my-4"></div>
+                <button id="periksa-pg" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-6 rounded-full">Periksa Jawaban</button>
+            </section>
+
+            <!-- LATIHAN 2: Susun Kalimat -->
+            <section id="latihan-sk" class="kuis-card text-center">
+                <h3 class="text-xl font-bold mb-4">Latihan 2: Susun Kalimat</h3>
+                <p class="text-gray-600 mb-6">Klik kata di "Bank Kata" untuk memindahkannya ke kotak jawaban. Klik kata di kotak jawaban untuk mengembalikannya.</p>
+                <div id="kalimat-tersusun" class="teks-arab bg-gray-100 p-4 rounded-lg min-h-[6rem] mb-4 flex justify-end items-center flex-wrap gap-2" dir="rtl"></div>
+                <p class="font-semibold mb-2">Bank Kata:</p>
+                <div id="bank-kata" class="flex justify-center items-center flex-wrap gap-3 mb-4 min-h-[4rem]"></div>
+                <div id="feedback-sk" class="font-bold h-6 my-4"></div>
+                <div class="flex justify-center gap-4">
+                    <button id="periksa-sk" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-full">Periksa Jawaban</button>
+                </div>
+            </section>
+
+            <!-- LATIHAN 3: Jodohkan Kata -->
+            <section id="latihan-jk" class="kuis-card text-center">
+                <h3 class="text-xl font-bold mb-4">Latihan 3: Jodohkan Kata</h3>
+                <p class="text-gray-600 mb-6">Klik satu kata Arab, lalu klik artinya yang sesuai.</p>
+                 <div class="flex flex-col md:flex-row justify-around gap-4">
+                     <div id="kolom-arab" class="flex flex-col gap-3 w-full"></div>
+                     <div id="kolom-indonesia" class="flex flex-col gap-3 w-full"></div>
+                 </div>
+                 <div id="feedback-jk" class="font-bold h-6 my-4"></div>
+                 <button id="periksa-jk" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-full">Periksa Jawaban</button>
+            </section>
+
+            <!-- LATIHAN 4: Isi Kalimat -->
+            <section id="latihan-is" class="kuis-card text-center">
+                 <h3 class="text-xl font-bold mb-4">Latihan 4: Isi Bagian yang Rumpang</h3>
+                <p class="text-gray-600 mb-6">Lengkapi kalimat di bawah ini dengan memilih kata yang tepat dari Bank Kata.</p>
+                <div id="konten-isian-singkat"></div>
+                <div id="feedback-is" class="font-bold h-6 my-4"></div>
+                <button id="periksa-is" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-6 rounded-full">Periksa Jawaban</button>
+            </section>
+
+            <!-- LATIHAN 5: Benar atau Salah -->
+            <section id="latihan-bs" class="kuis-card text-center">
+                 <h3 class="text-xl font-bold mb-4">Latihan 5: Benar atau Salah?</h3>
+                <p class="text-gray-600 mb-6">Pilihlah "Benar" atau "Salah" untuk pernyataan di bawah ini!</p>
+                <div id="pernyataan-bs" class="teks-arab bg-gray-50 p-4 rounded-lg mb-6 min-h-[6rem] flex items-center justify-center" dir="rtl"></div>
+                <div id="pilihan-jawaban-bs" class="flex justify-center gap-4"></div>
+                <div id="feedback-bs" class="font-bold h-6 my-4"></div>
+            </section>
+
+        </main>
+        
+        <footer class="text-center mt-8 text-gray-500 italic">
+            <p>Semoga Allah menambahkan ilmu kepada kita dan menganugerahkan kepada kita semua kepahaman. Aamiin.<br>Barakallahu fiikum..</p>
+        </footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- INISIALISASI UTAMA & AUDIO ---
+        const tanggalEl = document.getElementById('tanggal-pelajaran');
+        tanggalEl.textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        const speechSupported = 'speechSynthesis' in window;
+        let arabicVoice = null;
+        let speechReady = false;
+        let isAudioUnlocked = false;
+
+        function initializeSpeechSynthesis() {
+            if (speechReady || !speechSupported) return;
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                arabicVoice = voices.find(voice => voice.lang.startsWith('ar-'));
+                speechReady = true;
+            }
+        }
+        function unlockAudio() {
+            if (isAudioUnlocked || !speechSupported) return;
+            const synth = window.speechSynthesis;
+            if (synth.state === 'suspended') synth.resume();
+            const silentUtterance = new SpeechSynthesisUtterance('');
+            synth.speak(silentUtterance);
+            isAudioUnlocked = true;
+            initializeSpeechSynthesis();
+        }
+        initializeSpeechSynthesis();
+        if (speechSupported && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = initializeSpeechSynthesis;
+        }
+
+        function bacaTeks(teks) {
+            if (!speechSupported) return;
+            if (!speechReady) initializeSpeechSynthesis();
+            speechSynthesis.cancel();
+            const ucapan = new SpeechSynthesisUtterance(teks);
+            ucapan.lang = 'ar-SA';
+            if (arabicVoice) ucapan.voice = arabicVoice;
+            // REVISI 3: Mengubah kecepatan suara agar lebih lambat
+            ucapan.rate = 0.7; 
+            ucapan.pitch = 1.2; // Sedikit menaikkan pitch agar terdengar lebih muda
+            speechSynthesis.speak(ucapan);
+        }
+        
+        // --- INTERAKSI TEKS BACAAN ---
+        document.getElementById('tombol-baca-cerita').addEventListener('click', () => {
+            unlockAudio(); 
+            const teksLengkap = [...document.querySelectorAll('#materi-cerita .kata')].map(k => k.textContent.trim()).join(' ');
+            bacaTeks(teksLengkap);
+        });
+
+        document.querySelectorAll('#materi-cerita .kata').forEach(kata => {
+            kata.addEventListener('click', () => {
+                unlockAudio();
+                const kotakTerjemahan = document.getElementById('kotak-terjemahan');
+                document.querySelectorAll('#materi-cerita .kata').forEach(k => k.classList.remove('highlight'));
+                kata.classList.add('highlight');
+                kotakTerjemahan.textContent = kata.dataset.terjemahan;
+                bacaTeks(kata.textContent.trim());
+            });
+        });
+
+        // --- DATA KUIS BARU ---
+        const dataPg = [
+            { q: "كَمْ صَلَاةً فِي الْيَوْمِ وَاللَّيْلَةِ؟", a: "خَمْسُ صَلَوَاتٍ", o: ["ثَلَاثُ صَلَوَاتٍ", "أَرْبَعُ صَلَوَاتٍ", "خَمْسُ صَلَوَاتٍ"] },
+            { q: "مَتَى وَقْتُ صَلَاةِ الصُّبْحِ؟", a: "عِنْدَ طُلُوْعِ الْفَجْرِ", o: ["فِي النَّهَارِ", "عِنْدَ طُلُوْعِ الْفَجْرِ", "فِي الْمَسَاءِ"] },
+            { q: "كَمْ عَدَدُ رَكَعَاتِ صَلَاةِ الظُّهْرِ؟", a: "أَرْبَعُ رَكَعَاتٍ", o: ["رَkcy;عَتَانِ", "ثَلَاثُ رَكَعَاتٍ", "أَرْبَعُ رَكَعَاتٍ"] },
+            { q: "مَا هِيَ الصَّلَاةُ الَّتِيْ لَهَا ثَلَاثُ رَكَعَاتٍ؟", a: "صَلَاةُ الْمَغْرِبِ", o: ["صَلَاةُ الْعَصْرِ", "صَلَاةُ الْمَغْرِبِ", "صَلَاةُ الْعِشَاءِ"] },
+            { q: "فِي أَيِّ وَقْتٍ صَلَاةُ الْعِشَاءِ؟", a: "فِي اللَّيْلِ", o: ["فِي الصَّبَاحِ", "فِي النَّهَارِ", "فِي اللَّيْلِ"] }
+        ];
+        // REVISI 2: Menambah soal Susun Kalimat menjadi 5
+        const dataSk = [
+            { benar: ["صَلَاةُ", "الصُّبْحِ", "رَكْعَتَانِ"], acak: ["رَكْعَتَانِ", "الصُّبْحِ", "صَلَاةُ"] },
+            { benar: ["صَلَاةُ", "الْمَغْرِبِ", "ثَلَاثُ", "رَكَعَاتٍ"], acak: ["رَكَعَاتٍ", "الْمَغْرِبِ", "ثَلَاثُ", "صَلَاةُ"] },
+            { benar: ["صَلَاةُ", "الظُّهْرِ", "فِي", "النَّهَارِ"], acak: ["النَّهَارِ", "فِي", "الظُّهْرِ", "صَلَاةُ"] },
+            { benar: ["نَحْنُ", "مُسْلِمُوْنَ", "نُصَلِّيْ"], acak: ["نُصَلِّيْ", "نَحْنُ", "مُسْلِمُوْنَ"] },
+            { benar: ["صَلَاةُ", "الْعَصْرِ", "أَرْبَعُ", "رَكَعَاتٍ"], acak: ["أَرْبَعُ", "صَلَاةُ", "رَكَعَاتٍ", "الْعَصْرِ"] }
+        ];
+        const dataJk = [
+            { arab: 'الصُّبْحُ', indo: 'Subuh', id: 1 }, { arab: 'الظُّهْرُ', indo: 'Dzuhur', id: 2 },
+            { arab: 'الْمَغْرِبُ', indo: 'Maghrib', id: 3 }, { arab: 'خَمْسٌ', indo: 'Lima', id: 4 }, { arab: 'رَكْعَةٌ', indo: 'Rakaat', id: 5 }
+        ];
+        // REVISI 2: Menambah soal Isi Rumpang menjadi 5
+        const dataIs = [
+            { kalimat: "نَحْنُ مُسْلِمُوْنَ نُصَلِّيْ ______ صَلَوَاتٍ.", blanks: ["خَمْسَ"], pilihan: ["أَرْبَعَ", "خَمْسَ", "ثَلَاثَ"] },
+            { kalimat: "صَلَاةُ ______ أَرْبَعُ رَكَعَاتٍ.", blanks: ["الظُّهْرِ"], pilihan: ["الظُّهْرِ", "الْمَغْرِبِ", "الصُّبْحِ"] },
+            { kalimat: "صَلَاةُ الْمَغْرِبِ لَهَا ______ رَكَعَاتٍ.", blanks: ["ثَلَاثُ"], pilihan: ["ثَلَاثُ", "أَرْبَعُ", "خَمْسُ"] },
+            { kalimat: "صَلَاةُ الْعَصْرِ فِي ______.", blanks: ["الْمَسَاءِ"], pilihan: ["اللَّيْلِ", "النَّهَارِ", "الْمَسَاءِ"] },
+            { kalimat: "نَحْنُ ______ نُصَلِّيْ خَمْسَ صَلَوَاتٍ.", blanks: ["مُسْلِمُوْنَ"], pilihan: ["مُسْلِمُوْنَ", "طُلَّابٌ", "أَطِبَّاءُ"] }
+        ];
+        const dataBs = [
+            { pernyataan: "صَلَاةُ الظُّهْرِ ثَلَاثُ رَكَعَاتٍ.", jawaban: false },
+            { pernyataan: "نُصَلِّيْ فِي الْيَوْمِ خَمْسَ صَلَوَاتٍ.", jawaban: true },
+            { pernyataan: "صَلَاةُ الْمَغْرِبِ فِي الصَّبَاحِ.", jawaban: false }
+        ];
+
+        // --- LATIHAN 1: PILIHAN GANDA ---
+        const kontenPg = document.getElementById('konten-pilihan-ganda');
+        let soalPgSekarang = 0;
+        function muatSoalPg() {
+            const soal = dataPg[soalPgSekarang];
+            kontenPg.innerHTML = `<p class="text-xl font-semibold mb-4 min-h-[3rem] teks-arab" dir="rtl">${soal.q}</p>`;
+            const pilihanContainer = document.createElement('div');
+            pilihanContainer.className = 'grid grid-cols-1 sm:grid-cols-3 gap-4';
+            soal.o.forEach(pilihan => {
+                const tombol = document.createElement('button');
+                tombol.textContent = pilihan;
+                tombol.dataset.jawaban = pilihan;
+                tombol.className = 'tombol-pilihan bg-white hover:bg-gray-100 border-2 border-gray-300 font-semibold py-3 px-4 rounded-lg teks-arab';
+                tombol.onclick = () => {
+                    pilihanContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('terpilih', 'bg-blue-200'));
+                    tombol.classList.add('terpilih', 'bg-blue-200');
+                };
+                pilihanContainer.appendChild(tombol);
+            });
+            kontenPg.appendChild(pilihanContainer);
+        }
+        document.getElementById('periksa-pg').addEventListener('click', () => {
+            unlockAudio();
+            const terpilih = kontenPg.querySelector('.terpilih');
+            if (!terpilih) return;
+            const jawabanBenar = dataPg[soalPgSekarang].a;
+            const isBenar = terpilih.dataset.jawaban === jawabanBenar;
+            document.getElementById('feedback-pg').textContent = isBenar ? 'Benar!' : 'Kurang Tepat.';
+            document.getElementById('feedback-pg').style.color = isBenar ? '#059669' : '#ef4444';
+            if (isBenar && soalPgSekarang < dataPg.length - 1) {
+                soalPgSekarang++;
+                setTimeout(() => { muatSoalPg(); document.getElementById('feedback-pg').textContent = ''; }, 1500);
+            } else if (isBenar) {
+                document.getElementById('feedback-pg').textContent = 'Semua soal selesai, Mumtaz!';
+            }
+        });
+        muatSoalPg();
+
+        // --- LATIHAN 2: SUSUN KALIMAT ---
+        const kalimatTersusunEl = document.getElementById('kalimat-tersusun');
+        const bankKataEl = document.getElementById('bank-kata');
+        const periksaSkBtn = document.getElementById('periksa-sk');
+        let soalSkSekarang = 0;
+        function muatSoalSk() {
+            const soal = dataSk[soalSkSekarang];
+            kalimatTersusunEl.innerHTML = '';
+            bankKataEl.innerHTML = '';
+            soal.acak.forEach(kata => {
+                const kataEl = document.createElement('button');
+                kataEl.textContent = kata;
+                kataEl.className = 'kata-susun teks-arab bg-gray-200 p-2 rounded-lg';
+                const pindahKeJawaban = () => {
+                    kalimatTersusunEl.appendChild(kataEl);
+                    kataEl.className = 'kata-susun teks-arab bg-sky-200 p-2 rounded-lg';
+                    kataEl.onclick = () => {
+                        bankKataEl.appendChild(kataEl);
+                        kataEl.className = 'kata-susun teks-arab bg-gray-200 p-2 rounded-lg';
+                        kataEl.onclick = pindahKeJawaban; 
+                    };
+                };
+                kataEl.onclick = pindahKeJawaban;
+                bankKataEl.appendChild(kataEl);
+            });
+            document.getElementById('feedback-sk').textContent = '';
+        }
+        periksaSkBtn.addEventListener('click', () => {
+            unlockAudio();
+            const soal = dataSk[soalSkSekarang];
+            const jawabanUser = [...kalimatTersusunEl.children].map(el => el.textContent);
+            const isBenar = JSON.stringify(jawabanUser) === JSON.stringify(soal.benar);
+            const feedbackEl = document.getElementById('feedback-sk');
+            feedbackEl.textContent = isBenar ? 'Benar, Barakallah Fik!' : 'Urutannya belum tepat, coba lagi!';
+            feedbackEl.style.color = isBenar ? '#059669' : '#ef4444';
+
+            if (isBenar && soalSkSekarang < dataSk.length - 1) {
+                soalSkSekarang++;
+                setTimeout(() => { muatSoalSk(); }, 2000);
+            } else if (isBenar) {
+                feedbackEl.textContent = 'Semua soal susun kalimat selesai!';
+            }
+        });
+        muatSoalSk();
+
+
+        // --- LATIHAN 3: JODOHKAN KATA ---
+        let pilihanJk = { arab: null, indo: null };
+        const kolomArab = document.getElementById('kolom-arab');
+        const kolomIndo = document.getElementById('kolom-indonesia');
+        function muatSoalJk() {
+            kolomArab.innerHTML = '';
+            kolomIndo.innerHTML = '';
+            const acakArab = [...dataJk].sort(() => Math.random() - 0.5);
+            const acakIndo = [...dataJk].sort(() => Math.random() - 0.5);
+            const buatTombol = (item, tipe, kontainer) => {
+                const tombol = document.createElement('button');
+                tombol.textContent = item[tipe];
+                tombol.dataset.id = item.id;
+                tombol.className = `kata-jodoh w-full p-3 rounded-lg border-2 font-semibold ${tipe === 'arab' ? 'teks-arab' : ''}`;
+                tombol.onclick = () => pilihJodohan(tombol, tipe);
+                kontainer.appendChild(tombol);
+            };
+            acakArab.forEach(item => buatTombol(item, 'arab', kolomArab));
+            acakIndo.forEach(item => buatTombol(item, 'indo', kolomIndo));
+        }
+        function pilihJodohan(tombol, tipe) {
+            unlockAudio();
+            const kontainer = tipe === 'arab' ? kolomArab : kolomIndo;
+            kontainer.querySelectorAll('button').forEach(btn => btn.classList.remove('terpilih'));
+            tombol.classList.add('terpilih');
+            pilihanJk[tipe] = tombol;
+            if (pilihanJk.arab && pilihanJk.indo) {
+                if (pilihanJk.arab.dataset.id === pilihanJk.indo.dataset.id) {
+                    pilihanJk.arab.classList.add('benar');
+                    pilihanJk.indo.classList.add('benar');
+                    pilihanJk.arab.disabled = true;
+                    pilihanJk.indo.disabled = true;
+                }
+                setTimeout(() => {
+                    if(pilihanJk.arab) pilihanJk.arab.classList.remove('terpilih');
+                    if(pilihanJk.indo) pilihanJk.indo.classList.remove('terpilih');
+                    pilihanJk = { arab: null, indo: null };
+                }, 300);
+            }
+        }
+        document.getElementById('periksa-jk').addEventListener('click', () => {
+             const isBenar = [...kolomArab.children].every(btn => btn.disabled);
+             document.getElementById('feedback-jk').textContent = isBenar ? 'Selesai, Hebat!' : 'Belum semua pasangan benar.';
+             document.getElementById('feedback-jk').style.color = isBenar ? '#059669' : '#ef4444';
+        });
+        muatSoalJk();
+
+        // --- LATIHAN 4: ISI KALIMAT ---
+        const kontenIs = document.getElementById('konten-isian-singkat');
+        let soalIsSekarang = 0;
+        function muatSoalIs() {
+            const soal = dataIs[soalIsSekarang];
+            kontenIs.innerHTML = ''; 
+            const bankKataIsEl = document.createElement('div');
+            bankKataIsEl.className = 'flex justify-center items-center flex-wrap gap-3 mb-6';
+            const kalimatRumpangEl = document.createElement('div');
+            kalimatRumpangEl.className = 'teks-arab bg-gray-50 p-4 rounded-lg text-2xl leading-relaxed kalimat-rumpang';
+            kalimatRumpangEl.dir = 'rtl';
+            let blankTerpilih = null;
+            const kalimatParts = soal.kalimat.split('______');
+            kalimatParts.forEach((part, index) => {
+                kalimatRumpangEl.appendChild(document.createTextNode(part));
+                if (index < soal.blanks.length) {
+                    const blank = document.createElement('span');
+                    blank.className = 'blank-space';
+                    blank.dataset.jawaban = soal.blanks[index];
+                    blank.textContent = '______';
+                    blank.onclick = () => {
+                        unlockAudio();
+                        if (blank.textContent !== '______') {
+                            const returnedWord = blank.textContent;
+                            bankKataIsEl.querySelectorAll('.kata-bank').forEach(btn => {
+                                if (btn.textContent === returnedWord) {
+                                    btn.disabled = false;
+                                    btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                                }
+                            });
+                            blank.textContent = '______';
+                            blank.classList.remove('benar', 'salah');
+                        }
+                        kalimatRumpangEl.querySelectorAll('.blank-space').forEach(b => b.classList.remove('terpilih'));
+                        blank.classList.add('terpilih');
+                        blankTerpilih = blank;
+                    };
+                    kalimatRumpangEl.appendChild(blank);
+                }
+            });
+            soal.pilihan.forEach(kata => {
+                const kataBtn = document.createElement('button');
+                kataBtn.textContent = kata;
+                kataBtn.className = 'kata-bank teks-arab bg-gray-200 p-2 rounded-lg';
+                kataBtn.onclick = () => {
+                    unlockAudio();
+                    if (blankTerpilih) {
+                        if(blankTerpilih.textContent !== '______') {
+                             const returnedWord = blankTerpilih.textContent;
+                             bankKataIsEl.querySelectorAll('.kata-bank').forEach(btn => {
+                                if (btn.textContent === returnedWord) {
+                                    btn.disabled = false;
+                                    btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                                }
+                            });
+                        }
+                        blankTerpilih.textContent = kata;
+                        kataBtn.disabled = true;
+                        kataBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        blankTerpilih.classList.remove('terpilih');
+                        blankTerpilih = null;
+                    }
+                };
+                bankKataIsEl.appendChild(kataBtn);
+            });
+            kontenIs.appendChild(bankKataIsEl);
+            kontenIs.appendChild(kalimatRumpangEl);
+            document.getElementById('feedback-is').textContent = '';
+        }
+        document.getElementById('periksa-is').addEventListener('click', () => {
+            let semuaBenar = true;
+            kontenIs.querySelectorAll('.blank-space').forEach(blank => {
+                if (blank.textContent === '______') semuaBenar = false;
+                const isBenar = blank.textContent === blank.dataset.jawaban;
+                blank.classList.toggle('benar', isBenar);
+                blank.classList.toggle('salah', !isBenar);
+                if (!isBenar) semuaBenar = false;
+            });
+            if ([...kontenIs.querySelectorAll('.blank-space')].some(b => b.textContent === '______')) {
+                 document.getElementById('feedback-is').textContent = 'Isi semua bagian yang kosong ya.';
+                 document.getElementById('feedback-is').style.color = '#ef4444';
+                 return;
+            }
+            document.getElementById('feedback-is').textContent = semuaBenar ? 'Tepat Sekali!' : 'Ada yang belum pas, periksa lagi ya.';
+            document.getElementById('feedback-is').style.color = semuaBenar ? '#059669' : '#ef4444';
+             if (semuaBenar && soalIsSekarang < dataIs.length - 1) {
+                soalIsSekarang++;
+                setTimeout(() => { muatSoalIs(); document.getElementById('feedback-is').textContent = ''; }, 2000);
+            } else if (semuaBenar) {
+                document.getElementById('feedback-is').textContent = 'Semua soal isian selesai, keren!';
+            }
+        });
+        muatSoalIs();
+
+        // --- LATIHAN 5: BENAR ATAU SALAH ---
+        const pernyataanBsEl = document.getElementById('pernyataan-bs');
+        const pilihanJawabanBsEl = document.getElementById('pilihan-jawaban-bs');
+        const feedbackBsEl = document.getElementById('feedback-bs');
+        let soalBsSekarang = 0;
+
+        function muatSoalBs() {
+            const soal = dataBs[soalBsSekarang];
+            pernyataanBsEl.textContent = soal.pernyataan;
+            pilihanJawabanBsEl.innerHTML = '';
+            
+            const tombolBenar = document.createElement('button');
+            tombolBenar.textContent = 'Benar';
+            tombolBenar.className = 'tombol-pilihan bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg';
+            tombolBenar.onclick = () => periksaBs(true);
+
+            const tombolSalah = document.createElement('button');
+            tombolSalah.textContent = 'Salah';
+            tombolSalah.className = 'tombol-pilihan bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-lg';
+            tombolSalah.onclick = () => periksaBs(false);
+
+            pilihanJawabanBsEl.appendChild(tombolBenar);
+            pilihanJawabanBsEl.appendChild(tombolSalah);
+            feedbackBsEl.textContent = '';
+        }
+
+        function periksaBs(jawabanUser) {
+            unlockAudio();
+            const soal = dataBs[soalBsSekarang];
+            const isBenar = jawabanUser === soal.jawaban;
+            
+            feedbackBsEl.textContent = isBenar ? 'Jawabanmu Tepat!' : 'Kurang Tepat, coba perhatikan lagi materinya.';
+            feedbackBsEl.style.color = isBenar ? '#059669' : '#ef4444';
+
+            if (isBenar && soalBsSekarang < dataBs.length - 1) {
+                soalBsSekarang++;
+                setTimeout(() => { muatSoalBs(); }, 2000);
+            } else if (isBenar) {
+                feedbackBsEl.textContent = 'Latihan selesai, Masya Allah!';
+            }
+        }
+        muatSoalBs();
+
+    });
+    </script>
+</body>
+</html>
+
