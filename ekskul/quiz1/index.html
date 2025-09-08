@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Bahasa Arab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: #F1F8E8; /* Soft green background */
+        }
+        .arabic-text {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-size: 2.25rem;
+            direction: rtl;
+        }
+        .quiz-nav-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        .quiz-nav-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .quiz-nav-btn.active {
+             background-color: #4A5568; /* Darker color for active state */
+             color: white;
+        }
+        .feedback {
+            transition: all 0.3s ease;
+        }
+        /* Card Flip Animation for Quiz 2 */
+        .card { perspective: 1000px; }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.75rem;
+            border: 4px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-front {
+            background: #A3E635; /* Lime Green */
+        }
+        .card-back {
+            background: #F9A825; /* Yellow */
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 2.5rem;
+        }
+        
+        .correct-pulse { animation: pulse-green 0.8s; }
+        .incorrect-shake { animation: shake-red 0.5s; }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(132, 204, 22, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(132, 204, 22, 0); }
+        }
+        @keyframes shake-red {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .no-clicks {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <div class="container mx-auto p-4 md:p-6 max-w-5xl">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-green-700 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-graduation-cap"></i> Quiz Bahasa Arab
+            </h1>
+            <p class="text-gray-500 mt-2">Empat kuis seru berdasarkan materi halaman 1-15!</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+            <button onclick="showQuiz('quiz1', this)" class="quiz-nav-btn active bg-blue-500 text-white px-5 py-2 rounded-full"><i class="fa-solid fa-volume-high mr-2"></i>Lawan Kata Bunyi</button>
+            <button onclick="showQuiz('quiz2', this)" class="quiz-nav-btn bg-lime-500 text-white px-5 py-2 rounded-full"><i class="fa-solid fa-clone mr-2"></i>Pasangan Huruf</button>
+            <button onclick="showQuiz('quiz3', this)" class="quiz-nav-btn bg-amber-500 text-white px-5 py-2 rounded-full"><i class="fa-solid fa-bars-staggered mr-2"></i>Susun Kalimat</button>
+            <button onclick="showQuiz('quiz4', this)" class="quiz-nav-btn bg-rose-500 text-white px-5 py-2 rounded-full"><i class="fa-solid fa-search mr-2"></i>Pilih yang Beda</button>
+        </nav>
+
+        <main id="quiz-container" class="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg min-h-[450px] border-2 border-white">
+            <!-- Quiz 1: Lawan Kata Bunyi -->
+            <div id="quiz1" class="quiz-content">
+                <div class="flex flex-col items-center">
+                    <h2 class="text-2xl font-semibold text-center text-blue-800 mb-2">Quiz 1: Lawan Kata Bunyi</h2>
+                    <p class="text-gray-500 mb-4 text-center">Dengarkan kata ini, lalu pilih kata yang bunyinya paling mirip!</p>
+                    <div id="quiz1-question-card" class="bg-white shadow-xl rounded-2xl p-4 border-4 border-blue-300 mb-6">
+                         <p class="arabic-text font-bold text-blue-900" id="quiz1-question"></p>
+                    </div>
+                    <div id="quiz1-options" class="flex flex-col md:flex-row gap-6 w-full max-w-md"></div>
+                    <div id="quiz1-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div>
+                </div>
+            </div>
+
+            <!-- Quiz 2: Pasangan Huruf -->
+            <div id="quiz2" class="quiz-content hidden">
+                <h2 class="text-2xl font-semibold text-center text-lime-800 mb-4">Quiz 2: Pasangan Huruf</h2>
+                <div id="quiz2-board" class="grid grid-cols-4 gap-4 max-w-lg mx-auto"></div>
+                <div class="text-center mt-6">
+                    <p class="text-lg">Pasangan Ditemukan: <span id="quiz2-matches" class="font-bold">0</span></p>
+                    <div id="quiz2-feedback" class="mt-4 text-center text-2xl font-bold feedback h-8"></div>
+                    <button onclick="initQuiz2()" class="quiz-nav-btn bg-lime-600 text-white px-6 py-2 mt-4 rounded-full">Mulai Ulang</button>
+                </div>
+            </div>
+            
+            <!-- Quiz 3: Susun Kalimat -->
+            <div id="quiz3" class="quiz-content hidden">
+                <h2 class="text-2xl font-semibold text-center text-amber-800 mb-4">Quiz 3: Susun Kalimat</h2>
+                <p class="text-center text-gray-500 mb-4">Klik kata di bawah untuk menyusun kalimat yang benar!</p>
+                <div id="quiz3-answer-box" class="bg-amber-100 p-4 rounded-lg text-center mb-4 min-h-[80px] arabic-text font-bold text-amber-900 text-3xl" dir="rtl"></div>
+                <div id="quiz3-words" class="flex flex-wrap justify-center gap-3 mb-4"></div>
+                <div class="flex justify-center gap-3">
+                    <button id="quiz3-check" class="quiz-nav-btn bg-green-500 text-white px-8 py-2 rounded-full">Periksa</button>
+                    <button id="quiz3-clear" class="quiz-nav-btn bg-gray-400 text-white px-8 py-2 rounded-full">Hapus</button>
+                </div>
+                <div id="quiz3-feedback" class="mt-4 text-center text-2xl font-bold feedback"></div>
+                 <div id="quiz3-info" class="mt-2 text-center text-lg text-gray-600 h-16 transition-opacity duration-500 opacity-0 flex items-center justify-center gap-3"></div>
+            </div>
+
+            <!-- Quiz 4: Pilih yang Beda -->
+            <div id="quiz4" class="quiz-content hidden">
+                 <h2 class="text-2xl font-semibold text-center text-rose-800 mb-4">Quiz 4: Pilih yang Beda</h2>
+                 <p class="text-center text-gray-500 mb-4">Klik pada kotak <span class="font-bold">berwarna</span> yang isinya berbeda!</p>
+                 <div id="quiz4-items" class="flex flex-wrap justify-center gap-4 w-full max-w-lg mx-auto mt-8"></div>
+                 <div id="quiz4-feedback" class="mt-8 text-center text-2xl font-bold feedback"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- General Quiz Logic ---
+        function showQuiz(quizId, btnElement) {
+            document.querySelectorAll('.quiz-content').forEach(quiz => quiz.classList.add('hidden'));
+            document.getElementById(quizId).classList.remove('hidden');
+            
+            document.querySelectorAll('.quiz-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes('Bunyi')) btn.style.backgroundColor = '#3B82F6';
+                if (btn.textContent.includes('Huruf')) btn.style.backgroundColor = '#84CC16';
+                if (btn.textContent.includes('Kalimat')) btn.style.backgroundColor = '#F59E0B';
+                if (btn.textContent.includes('Beda')) btn.style.backgroundColor = '#F43F5E';
+            });
+            btnElement.classList.add('active');
+            btnElement.style.backgroundColor = '#4A5568';
+        }
+
+        // --- Quiz 1 Data & Logic (Lawan Kata Bunyi) ---
+        const quiz1Data = [
+            { question: 'حَبَّ', options: ['هَبَّ', 'دَبَّ'], answer: 'هَبَّ' },
+            { question: 'شَبَحَ', options: ['شَبَه', 'شَرِبَ'], answer: 'شَبَه' },
+            { question: 'حَرِير', options: ['سَرِير', 'هَرِير'], answer: 'هَرِير'}
+        ];
+        let currentQuiz1Index = 0;
+
+        function initQuiz1() {
+            currentQuiz1Index = Math.floor(Math.random() * quiz1Data.length);
+            const question = quiz1Data[currentQuiz1Index];
+            document.getElementById('quiz1-question').textContent = question.question;
+            const optionsEl = document.getElementById('quiz1-options');
+            optionsEl.innerHTML = '';
+            document.getElementById('quiz1-feedback').innerHTML = '';
+            
+            const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `<span class="arabic-text text-3xl">${opt}</span>`;
+                btn.className = 'quiz-nav-btn bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-xl w-full text-center transform hover:scale-105 transition-transform';
+                btn.onclick = () => checkQuiz1Answer(opt, btn);
+                optionsEl.appendChild(btn);
+            });
+        }
+        
+        function checkQuiz1Answer(selected, btn) {
+            const feedbackEl = document.getElementById('quiz1-feedback');
+            if (selected === quiz1Data[currentQuiz1Index].answer) {
+                feedbackEl.textContent = 'Hebat! Tepat Sekali! 👍';
+                feedbackEl.className = 'mt-6 text-center text-2xl font-bold text-green-500 feedback h-8';
+                btn.classList.add('correct-pulse');
+            } else {
+                feedbackEl.textContent = 'Kurang Tepat, Coba Lagi! 😥';
+                feedbackEl.className = 'mt-6 text-center text-2xl font-bold text-red-500 feedback h-8';
+                btn.classList.add('incorrect-shake');
+            }
+            setTimeout(() => {
+                btn.classList.remove('correct-pulse', 'incorrect-shake');
+                initQuiz1();
+            }, 1500);
+        }
+
+        // --- Quiz 2 Data & Logic (Pasangan Huruf) ---
+        const quiz2Letters = ['ح', 'ه', 'د', 'ذ', 'ر', 'ز'];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function initQuiz2() {
+            const board = document.getElementById('quiz2-board');
+            board.innerHTML = '';
+            document.getElementById('quiz2-matches').textContent = '0';
+            document.getElementById('quiz2-feedback').textContent = '';
+            flippedCards = [];
+            matchedPairs = 0;
+            const cards = [...quiz2Letters, ...quiz2Letters].sort(() => Math.random() - 0.5);
+            cards.forEach(letter => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card h-24 w-full cursor-pointer';
+                cardEl.dataset.letter = letter;
+                cardEl.innerHTML = `<div class="card-inner"><div class="card-front"><i class="fa-solid fa-leaf text-white text-4xl"></i></div><div class="card-back arabic-text">${letter}</div></div>`;
+                cardEl.addEventListener('click', () => flipCard(cardEl));
+                board.appendChild(cardEl);
+            });
+        }
+
+        function flipCard(cardEl) {
+            if (document.body.classList.contains('no-clicks')) return;
+            if (flippedCards.length < 2 && !cardEl.classList.contains('flipped')) {
+                cardEl.classList.add('flipped');
+                flippedCards.push(cardEl);
+                if (flippedCards.length === 2) {
+                    document.body.classList.add('no-clicks');
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            if (flippedCards.length < 2 || !flippedCards[0] || !flippedCards[1]) {
+                flippedCards = [];
+                document.body.classList.remove('no-clicks');
+                return;
+            }
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.letter === c2.dataset.letter) {
+                matchedPairs++;
+                document.getElementById('quiz2-matches').textContent = matchedPairs;
+                if (matchedPairs === quiz2Letters.length) {
+                    const feedbackEl = document.getElementById('quiz2-feedback');
+                    feedbackEl.textContent = 'Hore! Semua pasangan ditemukan!';
+                    feedbackEl.className = 'mt-4 text-center text-2xl font-bold text-green-500 feedback h-8';
+                }
+            } else {
+                c1.classList.remove('flipped');
+                c2.classList.remove('flipped');
+            }
+            flippedCards = [];
+            document.body.classList.remove('no-clicks');
+        }
+
+        // --- Quiz 3 Data & Logic (Susun Kalimat) ---
+        const quiz3Data = [
+            { sentence: 'السَّلَامُ عَلَيْكُمْ', words: ['السَّلَامُ', 'عَلَيْكُمْ'], translation: "Damai besertamu", icon: "fa-solid fa-hands-praying" },
+            { sentence: 'مَا اسْمُكَ؟', words: ['مَا', 'اسْمُكَ؟'], translation: "Siapa namamu? (lk)", icon: "fa-solid fa-person-circle-question" },
+            { sentence: 'اسْمِي مُحَمَّدٌ', words: ['اسْمِي', 'مُحَمَّدٌ'], translation: "Namaku Muhammad", icon: "fa-solid fa-child" },
+            { sentence: 'وَعَلَيْكُمُ السَّلَامُ', words: ['وَعَلَيْكُمُ', 'السَّلَامُ'], translation: "Damai besertamu juga", icon: "fa-solid fa-handshake-angle" },
+            { sentence: 'مَا اسْمُكِ؟', words: ['مَا', 'اسْمُكِ؟'], translation: "Siapa namamu? (pr)", icon: "fa-solid fa-person-dress-burst" },
+            { sentence: 'اسْمِي خَدِيجَةٌ', words: ['اسْمِي', 'خَدِيجَةٌ'], translation: "Namaku Khadijah", icon: "fa-solid fa-child-dress" },
+            { sentence: 'مَعَ السَّلَامَةِ', words: ['مَعَ', 'السَّلَامَةِ'], translation: "Sampai jumpa", icon: "fa-solid fa-hand-wave" }
+        ];
+        let currentQuiz3Index = 0;
+        let quiz3Answer = [];
+
+        function initQuiz3() {
+            currentQuiz3Index = Math.floor(Math.random() * quiz3Data.length);
+            const currentSentence = quiz3Data[currentQuiz3Index];
+            const wordsEl = document.getElementById('quiz3-words');
+            const answerBox = document.getElementById('quiz3-answer-box');
+            wordsEl.innerHTML = '';
+            answerBox.textContent = '';
+            quiz3Answer = [];
+            document.getElementById('quiz3-feedback').innerHTML = '';
+            document.getElementById('quiz3-info').classList.add('opacity-0');
+
+            
+            const shuffledWords = [...currentSentence.words].sort(() => Math.random() - 0.5);
+            shuffledWords.forEach(word => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `<span class="arabic-text text-2xl">${word}</span>`;
+                btn.className = 'quiz-nav-btn bg-amber-400 text-white p-3 rounded-lg';
+                btn.onclick = () => {
+                    quiz3Answer.push(word);
+                    answerBox.textContent = quiz3Answer.join(' ');
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50');
+                };
+                wordsEl.appendChild(btn);
+            });
+        }
+        document.getElementById('quiz3-check').onclick = () => {
+             const feedbackEl = document.getElementById('quiz3-feedback');
+             const infoEl = document.getElementById('quiz3-info');
+             if (quiz3Answer.join(' ') === quiz3Data[currentQuiz3Index].sentence) {
+                feedbackEl.textContent = 'Susunan yang Benar! 🎉';
+                feedbackEl.className = 'mt-4 text-center text-2xl font-bold text-green-500 feedback';
+                const currentData = quiz3Data[currentQuiz3Index];
+                infoEl.innerHTML = `<i class="${currentData.icon} text-3xl text-gray-500"></i> <p>"${currentData.translation}"</p>`;
+                infoEl.classList.remove('opacity-0');
+             } else {
+                feedbackEl.textContent = 'Belum Benar, Coba Lagi!';
+                feedbackEl.className = 'mt-4 text-center text-2xl font-bold text-red-500 feedback';
+             }
+             setTimeout(initQuiz3, 2500);
+        };
+        document.getElementById('quiz3-clear').onclick = initQuiz3;
+        
+        // --- Quiz 4 Data & Logic (Pilih yang Beda) ---
+        const quiz4Data = [
+            // 5 Letter challenges
+            { items: ['د', 'د', 'ذ', 'د'], answer: 'ذ' },
+            { items: ['ح', 'ه', 'ح', 'ح'], answer: 'ه' },
+            { items: ['ذ', 'د', 'ذ', 'ذ'], answer: 'د' },
+            { items: ['ه', 'ه', 'ه', 'ح'], answer: 'ح' },
+            { items: ['ر', 'ر', 'ز', 'ر'], answer: 'ز' },
+            // 10 Word challenges
+            { items: ['شَبَحَ', 'شَبَحَ', 'شَبَه', 'شَبَحَ'], answer: 'شَبَه' },
+            { items: ['حَرِير', 'هَرِير', 'حَرِير', 'حَرِير'], answer: 'هَرِير' },
+            { items: ['كَبِير', 'كَبِير', 'خَبِير', 'كَبِير'], answer: 'خَبِير' },
+            { items: ['طَابَ', 'طَابَ', 'تَابَ', 'طَابَ'], answer: 'تَابَ' },
+            { items: ['ظَلَّ', 'ظَلَّ', 'ذَلَّ', 'ظَلَّ'], answer: 'ذَلَّ' },
+            { items: ['نَهْر', 'نَهْر', 'نَحَر', 'نَهْر'], answer: 'نَحَر' },
+            { items: ['سَاحِر', 'سَاهِر', 'سَاحِر', 'سَاحِر'], answer: 'سَاهِر' },
+            { items: ['خَال', 'خَال', 'خَال', 'كَال'], answer: 'كَال' },
+            { items: ['خَرَّ', 'كَرَّ', 'خَرَّ', 'خَرَّ'], answer: 'كَرَّ' },
+            { items: ['فَطَنَ', 'فَتَنَ', 'فَطَنَ', 'فَطَنَ'], answer: 'فَتَنَ' }
+        ];
+        const colorPalette = ['bg-red-400', 'bg-yellow-400', 'bg-green-400', 'bg-blue-400', 'bg-indigo-400', 'bg-purple-400', 'bg-pink-400'];
+        let currentQuiz4Index = 0;
+
+        function initQuiz4() {
+            currentQuiz4Index = Math.floor(Math.random() * quiz4Data.length);
+            const current = quiz4Data[currentQuiz4Index];
+            const itemsEl = document.getElementById('quiz4-items');
+            itemsEl.innerHTML = '';
+            document.getElementById('quiz4-feedback').innerHTML = '';
+            
+            const shuffledItems = [...current.items].sort(() => Math.random() - 0.5);
+            const shuffledColors = [...colorPalette].sort(() => Math.random() - 0.5);
+
+            shuffledItems.forEach((item, index) => {
+                const btn = document.createElement('button');
+                const isWord = item.length > 1;
+                const fontSize = isWord ? 'text-2xl' : 'text-4xl';
+                const buttonSize = isWord ? 'w-40 h-28' : 'w-24 h-24';
+                const color = shuffledColors[index % shuffledColors.length];
+                
+                btn.innerHTML = `<span class="arabic-text ${fontSize}">${item}</span>`;
+                btn.className = `quiz-nav-btn ${color} hover:opacity-80 text-white ${buttonSize} rounded-xl flex items-center justify-center transition-transform transform hover:scale-105`;
+                btn.onclick = () => checkQuiz4Answer(item, btn);
+                itemsEl.appendChild(btn);
+            });
+        }
+
+        function checkQuiz4Answer(selected, btn) {
+            const feedbackEl = document.getElementById('quiz4-feedback');
+            if (selected === quiz4Data[currentQuiz4Index].answer) {
+                feedbackEl.textContent = 'Kamu Jeli Sekali! ✅';
+                feedbackEl.className = 'mt-8 text-center text-2xl font-bold text-green-500 feedback';
+                btn.classList.add('correct-pulse');
+            } else {
+                feedbackEl.textContent = 'Bukan yang itu! ❌';
+                feedbackEl.className = 'mt-8 text-center text-2xl font-bold text-red-500 feedback';
+                btn.classList.add('incorrect-shake');
+            }
+            setTimeout(() => {
+                btn.classList.remove('correct-pulse', 'incorrect-shake');
+                initQuiz4();
+            }, 1500);
+        }
+
+        // --- Initialize on load ---
+        window.onload = () => {
+            initQuiz1();
+            initQuiz2();
+            initQuiz3();
+            initQuiz4();
+            showQuiz('quiz1', document.querySelector('.quiz-nav-btn'));
+        };
+    </script>
+</body>
+</html>
+
