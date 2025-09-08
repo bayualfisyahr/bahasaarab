@@ -91,7 +91,7 @@
             <h1 class="text-4xl md:text-5xl font-bold text-green-700 flex items-center justify-center gap-3">
                 <i class="fa-solid fa-graduation-cap"></i> Quiz Bahasa Arab
             </h1>
-            <p class="text-gray-500 mt-2">Empat kuis seru berdasarkan materi halaman 1-15!</p>
+            <p class="text-gray-500 mt-2">Empat materi kuis berdasarkan materi halaman 1-15!</p>
         </header>
 
         <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
@@ -133,6 +133,7 @@
                 <div id="quiz3-answer-box" class="bg-amber-100 p-4 rounded-lg text-center mb-4 min-h-[80px] arabic-text font-bold text-amber-900 text-3xl" dir="rtl"></div>
                 <div id="quiz3-words" class="flex flex-wrap justify-center gap-3 mb-4"></div>
                 <div class="flex justify-center gap-3">
+                    <button id="quiz3-help" class="quiz-nav-btn bg-blue-500 text-white px-8 py-2 rounded-full"><i class="fa-solid fa-lightbulb mr-2"></i>Bantuan</button>
                     <button id="quiz3-check" class="quiz-nav-btn bg-green-500 text-white px-8 py-2 rounded-full">Periksa</button>
                     <button id="quiz3-clear" class="quiz-nav-btn bg-gray-400 text-white px-8 py-2 rounded-full">Hapus</button>
                 </div>
@@ -169,9 +170,16 @@
 
         // --- Quiz 1 Data & Logic (Lawan Kata Bunyi) ---
         const quiz1Data = [
-            { question: 'حَبَّ', options: ['هَبَّ', 'دَبَّ'], answer: 'هَبَّ' },
-            { question: 'شَبَحَ', options: ['شَبَه', 'شَرِبَ'], answer: 'شَبَه' },
-            { question: 'حَرِير', options: ['سَرِير', 'هَرِير'], answer: 'هَرِير'}
+            { question: 'حَرِير', options: ['هَرِير', 'سَرِير'], answer: 'هَرِير'},
+            { question: 'شَبَحَ', options: ['شَبَه', 'فَتَحَ'], answer: 'شَبَه'},
+            { question: 'نَاحِيَة', options: ['نَاهِيَة', 'نَادِيَة'], answer: 'نَاهِيَة'},
+            { question: 'خَيْل', options: ['كَيْل', 'سَيْل'], answer: 'كَيْل'},
+            { question: 'شَكَرَ', options: ['شَجَرَ', 'شَخَرَ'], answer: 'شَخَرَ'},
+            { question: 'كَامِل', options: ['خَامِل', 'حَامِل'], answer: 'خَامِل'},
+            { question: 'خَرَّ', options: ['كَرَّ', 'مَرَّ'], answer: 'كَرَّ'},
+            { question: 'نَهْر', options: ['نَحَر', 'زَهْر'], answer: 'نَحَر'},
+            { question: 'سَاحِر', options: ['سَاهِر', 'صَغِير'], answer: 'سَاهِر'},
+            { question: 'بَلَح', options: ['بَلَد', 'بَلَه'], answer: 'بَلَه'}
         ];
         let currentQuiz1Index = 0;
 
@@ -290,8 +298,12 @@
             answerBox.textContent = '';
             quiz3Answer = [];
             document.getElementById('quiz3-feedback').innerHTML = '';
-            document.getElementById('quiz3-info').classList.add('opacity-0');
-
+            const infoEl = document.getElementById('quiz3-info');
+            infoEl.classList.add('opacity-0');
+            
+            const helpBtn = document.getElementById('quiz3-help');
+            helpBtn.disabled = false;
+            helpBtn.classList.remove('opacity-50');
             
             const shuffledWords = [...currentSentence.words].sort(() => Math.random() - 0.5);
             shuffledWords.forEach(word => {
@@ -307,6 +319,17 @@
                 wordsEl.appendChild(btn);
             });
         }
+        
+        document.getElementById('quiz3-help').onclick = () => {
+            const infoEl = document.getElementById('quiz3-info');
+            const currentData = quiz3Data[currentQuiz3Index];
+            infoEl.innerHTML = `<i class="${currentData.icon} text-3xl text-gray-500"></i> <p>Artinya: "${currentData.translation}"</p>`;
+            infoEl.classList.remove('opacity-0');
+            const helpBtn = document.getElementById('quiz3-help');
+            helpBtn.disabled = true;
+            helpBtn.classList.add('opacity-50');
+        };
+
         document.getElementById('quiz3-check').onclick = () => {
              const feedbackEl = document.getElementById('quiz3-feedback');
              const infoEl = document.getElementById('quiz3-info');
