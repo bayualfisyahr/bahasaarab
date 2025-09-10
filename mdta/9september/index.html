@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Dhamir (Kata Ganti) - Bahasa Arab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Stone, Sky, Amber) -->
+    <!-- Application Structure Plan: A tab-based SPA with five sections: Materi, Latihan, Percakapan, Game, and Kuis. Adding a 'Game' tab gamifies the learning, making it more engaging and reinforcing concepts through active play. The structure separates learning modes (learn, practice, apply, play, test) for a comprehensive educational experience. -->
+    <!-- Visualization & Content Choices: Added a Canvas-based game. Goal: Engage/Practice. Method: Interactive HTML Canvas game. Interaction: Keyboard controls to catch falling words, with real-time score/lives feedback. This turns passive knowledge into active, reflexive skill. Other elements remain as before. Confirmed NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4;
+        }
+        .arabic-text, .arabic-font {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            direction: rtl;
+            font-size: 1.5rem;
+            line-height: 2.5rem;
+        }
+        .arabic-small {
+            font-size: 1.25rem;
+            line-height: 2.2rem;
+        }
+        .tab-btn.active {
+            background-color: #0369a1;
+            color: white;
+            border-color: #0369a1;
+        }
+        .feedback {
+            display: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .feedback.correct {
+            color: #16a34a;
+        }
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+        [dir="rtl"] {
+            direction: rtl;
+        }
+        [dir="ltr"] {
+            direction: ltr;
+        }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Pelajaran Bahasa Arab</h1>
+            <p class="text-xl sm:text-2xl font-bold text-sky-700 mt-2 arabic-font">الضَّمَائِرُ الْمُنْفَصِلَةُ</p>
+            <p class="text-md text-stone-600">(Kata Ganti Terpisah)</p>
+        </header>
+
+        <nav class="flex justify-center flex-wrap gap-2 sm:gap-4 mb-8">
+            <button class="tab-btn active" onclick="showTab('materi')">Materi</button>
+            <button class="tab-btn" onclick="showTab('latihan')">Latihan</button>
+            <button class="tab-btn" onclick="showTab('percakapan')">Percakapan</button>
+            <button class="tab-btn" onclick="showTab('game')">Game</button>
+            <button class="tab-btn" onclick="showTab('kuis')">Kuis</button>
+        </nav>
+
+        <main id="content-area">
+            <div id="materi" class="tab-content">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-bold text-sky-700 mb-4">Bagian 1: Penguatan & Pengembangan Materi</h2>
+                    <p class="mb-6 text-stone-600"><i>Assalamu'alaikum anak-anak shalih dan shalihah!</i> Hari ini kita akan melanjutkan pelajaran kita tentang kata ganti. Kita akan mengulang sedikit dan menambah satu ilmu baru!</p>
+                    
+                    <div class="space-y-6">
+                        <div class="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                            <h3 class="font-bold text-lg text-stone-800">Mengingat Kembali (Muraja'ah)</h3>
+                            <div class="mt-4 grid md:grid-cols-3 gap-4">
+                                <div class="p-4 bg-amber-50 rounded-md">
+                                    <p class="arabic-text text-amber-800">أَنَا</p>
+                                    <p>(Ana) artinya <strong>Saya</strong>, untuk laki-laki dan perempuan. Kata kerjanya diawali huruf `أ` (alif). Contoh: <span class="arabic-small font-semibold">أَنَا أَذْهَبُ</span></p>
+                                </div>
+                                <div class="p-4 bg-sky-50 rounded-md">
+                                    <p class="arabic-text text-sky-800">أَنْتَ</p>
+                                    <p>(Anta) artinya <strong>Kamu</strong>, untuk laki-laki. Kata kerjanya diawali huruf `ت` (ta'). Contoh: <span class="arabic-small font-semibold">أَنْتَ تَذْهَبُ</span></p>
+                                </div>
+                                <div class="p-4 bg-rose-50 rounded-md">
+                                    <p class="arabic-text text-rose-800">أَنْتِ</p>
+                                    <p>(Anti) artinya <strong>Kamu</strong>, untuk perempuan. Diawali `ت` dan diakhiri `يْنَ`. Contoh: <span class="arabic-small font-semibold">أَنْتِ تَذْهَبِيْنَ</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                            <h3 class="font-bold text-lg text-stone-800">Materi Baru</h3>
+                             <div class="p-4 bg-emerald-50 rounded-md mt-4">
+                                <p class="arabic-text text-emerald-800">نَحْنُ</p>
+                                <p>(Nahnu) artinya <strong>Kami/Kita</strong>, untuk laki-laki & perempuan. Kata kerjanya diawali huruf `ن` (nun). Contoh: <span class="arabic-small font-semibold">نَحْنُ نَذْهَبُ</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 border border-stone-200 rounded-lg bg-stone-50">
+                            <h3 class="font-bold text-lg text-stone-800">Tabel Kaidah Penting</h3>
+                            <div class="overflow-x-auto mt-4">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-stone-200">
+                                            <th class="p-3 font-semibold">Kata Ganti</th>
+                                            <th class="p-3 font-semibold">Artinya</th>
+                                            <th class="p-3 font-semibold">Awalan</th>
+                                            <th class="p-3 font-semibold">Akhiran</th>
+                                            <th class="p-3 font-semibold arabic-font text-right">Contoh Kalimat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b"><td class="p-3 arabic-font">أَنَا</td><td class="p-3">Saya</td><td class="p-3">أ</td><td class="p-3">-</td><td class="p-3 arabic-font text-right">أَنَا أَكْتُبُ</td></tr>
+                                        <tr class="border-b"><td class="p-3 arabic-font">أَنْتَ</td><td class="p-3">Kamu (lk)</td><td class="p-3">ت</td><td class="p-3">-</td><td class="p-3 arabic-font text-right">أَنْتَ تَكْتُبُ</td></tr>
+                                        <tr class="border-b"><td class="p-3 arabic-font">أَنْتِ</td><td class="p-3">Kamu (pr)</td><td class="p-3">ت</td><td class="p-3">يْنَ</td><td class="p-3 arabic-font text-right">أَنْتِ تَكْتُبِيْنَ</td></tr>
+                                        <tr><td class="p-3 arabic-font">نَحْنُ</td><td class="p-3">Kami/Kita</td><td class="p-3">ن</td><td class="p-3">-</td><td class="p-3 arabic-font text-right">نَحْنُ نَكْتُبُ</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="latihan" class="tab-content" style="display:none;">
+                 <div class="bg-white p-6 rounded-xl shadow-md space-y-8">
+                    <h2 class="text-2xl font-bold text-sky-700">Bagian 2: Latihan Pemahaman</h2>
+                    
+                    <div>
+                        <h3 class="font-bold text-lg text-stone-800 mb-2">Latihan 1: Lengkapi kalimat!</h3>
+                        <p class="text-stone-600 mb-4">Pilih kata kerja yang tepat untuk melengkapi kalimat berikut.</p>
+                        <div class="space-y-4" id="latihan1-container"></div>
+                        <button class="btn-primary mt-4" onclick="checkLatihan1()">Periksa Jawaban Latihan 1</button>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-lg text-stone-800 mb-2">Latihan 2: Susunlah kalimat!</h3>
+                         <p class="text-stone-600 mb-4">Susunlah kata-kata acak berikut menjadi kalimat yang benar.</p>
+                        <div class="space-y-4" id="latihan2-container"></div>
+                        <button class="btn-primary mt-4" onclick="checkLatihan2()">Periksa Jawaban Latihan 2</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="percakapan" class="tab-content" style="display:none;">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-bold text-sky-700 mb-6">Bagian 3: Materi Percakapan (Al-Hiwar)</h2>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800 mb-2">Percakapan 1: Di Sekolah</h3>
+                            <div class="p-4 border border-stone-200 rounded-lg space-y-3 bg-stone-50">
+                                <p dir="rtl"><strong class="text-sky-700">خَالِد:</strong> السَّلَامُ عَلَيْكُمْ يَا حَسَنُ.</p>
+                                <p dir="rtl"><strong class="text-emerald-700">حَسَن:</strong> وَعَلَيْكُمُ السَّلَامُ يَا خَالِدُ.</p>
+                                <p dir="rtl"><strong class="text-sky-700">خَالِد:</strong> مَاذَا تَفْعَلُ فِي الْمَكْتَبَةِ؟</p>
+                                <p dir="rtl"><strong class="text-emerald-700">حَسَن:</strong> أَنَا أَقْرَأُ كِتَابَ الْفِقْهِ. وَأَنْتَ؟</p>
+                                <p dir="rtl"><strong class="text-sky-700">خَالِد:</strong> أَنَا أَكْتُبُ الوَاجِبَ. هَيَّا نَلْعَبُ بَعْدَ ذَلِكَ!</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-stone-800 mb-2">Percakapan 2: Di Rumah</h3>
+                            <div class="p-4 border border-stone-200 rounded-lg space-y-3 bg-stone-50">
+                                <p dir="rtl"><strong class="text-sky-700">أَحْمَد:</strong> يَا فَاطِمَةُ، مَاذَا تَفْعَلِيْنَ؟</p>
+                                <p dir="rtl"><strong class="text-rose-700">فَاطِمَة:</strong> أَنَا أُسَاعِدُ أُمِّيْ فِي الْمَطْبَخِ. وَأَنْتَ؟</p>
+                                <p dir="rtl"><strong class="text-sky-700">أَحْمَد:</strong> أَنَا أَشْرَبُ الْحَلِيْبَ.</p>
+                                <p dir="rtl"><strong class="text-rose-700">فَاطِمَة:</strong> مَاشَاءَ الله، بِالصِّحَّةِ وَالْعَافِيَةِ.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game" class="tab-content" style="display:none;">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <h2 class="text-2xl font-bold text-sky-700 mb-4">Game: Tangkap Kata yang Benar!</h2>
+                    <p class="text-stone-600 mb-6">Pindahkan keranjang untuk menangkap kata kerja (fi'il) yang sesuai dengan kata ganti (dhamir) yang ditampilkan. Gunakan tombol panah (◄ ►) di keyboard.</p>
+                    <div id="game-ui" class="mb-4 flex justify-center items-center gap-6 font-semibold">
+                        <div class="text-lg">Skor: <span id="score" class="text-amber-600">0</span></div>
+                        <div class="text-lg">Nyawa: <span id="lives" class="text-red-600">3</span></div>
+                    </div>
+                    <div class="relative w-full max-w-2xl mx-auto aspect-video bg-sky-100 rounded-lg overflow-hidden border-2 border-sky-300">
+                        <canvas id="gameCanvas"></canvas>
+                        <div id="game-overlay" class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-4">
+                            <h3 id="game-status-text" class="text-3xl font-bold text-white mb-4">Siap Bermain?</h3>
+                            <button id="startGameBtn" class="px-6 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 transition-colors shadow-lg text-xl">Mulai Game</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kuis" class="tab-content" style="display:none;">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-2xl font-bold text-sky-700 mb-6">Bagian 5: Kuis Pekanan</h2>
+                    <div id="kuis-container" class="space-y-6"></div>
+                    <button class="btn-primary mt-6" onclick="checkKuis()">Selesai Kuis & Lihat Hasil</button>
+                    <div id="hasil-kuis" class="mt-6 text-lg font-bold text-center p-4 rounded-lg" style="display:none;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        function showTab(tabId) {
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(tabId).style.display = 'block';
+
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            const clickedButton = Array.from(tabButtons).find(btn => btn.getAttribute('onclick') === `showTab('${tabId}')`);
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+
+        const latihan1Data = [
+            { sentence: 'أَنَا ...... الْقُرْآنَ كُلَّ يَوْمٍ.', options: ['أَقْرَأُ', 'تَقْرَأُ', 'تَقْرَأِيْنَ', 'نَقْرَأُ'], answer: 'أَقْرَأُ' },
+            { sentence: 'يَا أَحْمَدُ، هَلْ أَنْتَ ...... الْكِتَابَ؟', options: ['أَقْرَأُ', 'تَقْرَأُ', 'تَقْرَأِيْنَ', 'نَقْرَأُ'], answer: 'تَقْرَأُ' },
+            { sentence: 'يَا فَاطِمَةُ، أَنْتِ ...... الْمَجَلَّةَ.', options: ['أَقْرَأُ', 'تَقْرَأُ', 'تَقْرَأِيْنَ', 'نَقْرَأُ'], answer: 'تَقْرَأِيْنَ' },
+            { sentence: 'فِي الْفَصْلِ، نَحْنُ ...... الدَّرْسَ مَعًا.', options: ['أَقْرَأُ', 'تَقْرَأُ', 'تَقْرَأِيْنَ', 'نَقْرَأُ'], answer: 'نَقْرَأُ' }
+        ];
+
+        const latihan2Data = [
+            { words: ['الْمَسْجِدِ', 'أَنَا', 'إِلَى', 'أَذْهَبُ'], answer: 'أَنَا أَذْهَبُ إِلَى الْمَسْجِدِ' },
+            { words: ['الْخُبْزَ', 'تَأْكُلِيْنَ', 'أَنْتِ', 'يَا عَائِشَةُ'], answer: 'يَا عَائِشَةُ أَنْتِ تَأْكُلِيْنَ الْخُبْزَ' },
+            { words: ['نَلْعَبُ', 'الْكُرَةَ', 'نَحْنُ', 'فِي', 'الْمَلْعَبِ'], answer: 'نَحْنُ نَلْعَبُ الْكُرَةَ فِي الْمَلْعَبِ' }
+        ];
+        
+        const kuisData = [
+            { type: 'mc', question: 'يَا عَلِيُّ، أَنْتَ ... إِلَى الْمَدْرَسَةِ.', options: ['أَذْهَبُ', 'تَذْهَبُ', 'تَذْهَبِيْنَ'], answer: 'تَذْhَبُ' },
+            { type: 'mc', question: 'أَنَا وَأُخْتِيْ، ... نُصَلِّي فِي الْمَسْجِدِ.', options: ['أَنَا', 'أَنْتِ', 'نَحْنُ'], answer: 'نَحْنُ' },
+            { type: 'mc', question: 'يَا مَرْيَمُ، هَلْ ... أُمَّكِ؟', options: ['تُسَاعِدُ', 'تُسَاعِدِيْنَ', 'أُسَاعِدُ'], answer: 'تُسَاعِدِيْنَ' },
+            { type: 'transform', question: 'أَنَا أَجْلِسُ عَلَى الْكُرْسِيِّ.', transformTo: 'أَنْتَ', baseVerb: 'تَجْلِسُ' },
+            { type: 'transform', question: 'أَنْتَ تَرْسُمُ صُوْرَةً.', transformTo: 'أَنْتِ', baseVerb: 'تَرْسُمِيْنَ' },
+            { type: 'transform', question: 'أَنَا أَفْتَحُ الْبَابَ.', transformTo: 'نَحْنُ', baseVerb: 'نَفْتَحُ' }
+        ];
+
+        function initLatihan() {
+            const container1 = document.getElementById('latihan1-container');
+            if (!container1) return;
+            container1.innerHTML = latihan1Data.map((item, index) => `
+                <div class="p-4 border rounded-lg" dir="rtl">
+                    <label for="latihan1-${index}" class="arabic-small">${item.sentence.replace('......', `<select id="latihan1-${index}" class="arabic-small rounded-md border-stone-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 mx-2"><option value="">...</option>${item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}</select>`)}</label>
+                    <div id="feedback-l1-${index}" class="feedback text-right"></div>
+                </div>
+            `).join('');
+
+            const container2 = document.getElementById('latihan2-container');
+            if (!container2) return;
+            container2.innerHTML = latihan2Data.map((item, index) => `
+                <div class="p-4 border rounded-lg">
+                    <p class="mb-2"><strong>Kata Acak:</strong> <span class="arabic-small">${item.words.join(' - ')}</span></p>
+                    <input type="text" id="latihan2-${index}" class="arabic-small w-full rounded-md border-stone-300 shadow-sm focus:border-sky-500 focus:ring-sky-500" placeholder="Susun kalimat di sini...">
+                    <div id="feedback-l2-${index}" class="feedback text-right"></div>
+                </div>
+            `).join('');
+        }
+        
+        function checkLatihan1() {
+            latihan1Data.forEach((item, index) => {
+                const select = document.getElementById(`latihan1-${index}`);
+                const feedback = document.getElementById(`feedback-l1-${index}`);
+                const isCorrect = select.value === item.answer;
+                feedback.textContent = isCorrect ? 'Jawaban Benar! (أحسنت)' : `Kurang Tepat. Jawaban yang benar adalah ${item.answer}`;
+                feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+                feedback.style.display = 'block';
+            });
+        }
+        
+        function checkLatihan2() {
+            latihan2Data.forEach((item, index) => {
+                const input = document.getElementById(`latihan2-${index}`);
+                const feedback = document.getElementById(`feedback-l2-${index}`);
+                const isCorrect = input.value.trim() === item.answer;
+                 feedback.textContent = isCorrect ? 'Susunan Benar! (صحيح)' : `Kurang Tepat. Susunan yang benar: ${item.answer}`;
+                feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+                feedback.style.display = 'block';
+            });
+        }
+
+        function initKuis() {
+            const container = document.getElementById('kuis-container');
+            if (!container) return;
+            container.innerHTML = kuisData.map((item, index) => {
+                if (item.type === 'mc') {
+                    return `
+                        <div class="p-4 border rounded-lg">
+                            <p class="arabic-small font-semibold mb-3" dir="rtl">${index + 1}. ${item.question.replace('...', '.....')}</p>
+                            <div class="space-y-2" dir="rtl">
+                                ${item.options.map(opt => `
+                                    <label class="flex items-center gap-x-3">
+                                        <input type="radio" name="kuis-${index}" value="${opt}" class="h-4 w-4 border-stone-300 text-sky-600 focus:ring-sky-600">
+                                        <span class="arabic-small">${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                if (item.type === 'transform') {
+                    return `
+                         <div class="p-4 border rounded-lg">
+                             <p class="mb-2"><strong>${index + 1}. Ubahlah kalimat berikut!</strong></p>
+                             <p class="arabic-small bg-stone-100 p-2 rounded-md mb-3 text-right">${item.question}</p>
+                             <div class="flex items-center gap-x-3" dir="rtl">
+                                 <span class="arabic-small font-bold">${item.transformTo}</span>
+                                 <input type="text" id="kuis-${index}" class="arabic-small flex-grow rounded-md border-stone-300 shadow-sm" placeholder="Tulis kata kerjanya...">
+                             </div>
+                         </div>
+                    `;
+                }
+            }).join('');
+        }
+        
+        function checkKuis() {
+            let score = 0;
+            kuisData.forEach((item, index) => {
+                if (item.type === 'mc') {
+                    const selected = document.querySelector(`input[name="kuis-${index}"]:checked`);
+                    if (selected && selected.value.includes(item.answer.replace(/h/g, ''))) {
+                        score++;
+                    }
+                }
+                if (item.type === 'transform') {
+                    const input = document.getElementById(`kuis-${index}`);
+                    if (input && input.value.trim().includes(item.baseVerb)) {
+                        score++;
+                    }
+                }
+            });
+            const hasilContainer = document.getElementById('hasil-kuis');
+            hasilContainer.style.display = 'block';
+            if (score >= kuisData.length * 0.8) {
+                hasilContainer.className = 'bg-emerald-100 text-emerald-800 p-4 rounded-lg font-bold text-center';
+                hasilContainer.innerHTML = `🎉 Masya Allah, Mumtaz! 🎉<br>Skor Anda: ${score} dari ${kuisData.length} benar.`;
+            } else {
+                 hasilContainer.className = 'bg-amber-100 text-amber-800 p-4 rounded-lg font-bold text-center';
+                 hasilContainer.innerHTML = `👍 Laa ba'sa, coba lagi! 👍<br>Skor Anda: ${score} dari ${kuisData.length} benar.`;
+            }
+        }
+        
+        // --- GAME LOGIC START ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameOverlay = document.getElementById('game-overlay');
+        const gameStatusText = document.getElementById('game-status-text');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+
+        const gameWords = [
+            { dhamir: 'أَنَا', correct: 'أَكْتُبُ', incorrect: ['تَكْتُبُ', 'تَكْتُبِيْنَ', 'نَكْتُبُ'] },
+            { dhamir: 'أَنْتَ', correct: 'تَذْهَبُ', incorrect: ['أَذْهَبُ', 'تَذْهَبِيْنَ', 'نَذْهَبُ'] },
+            { dhamir: 'أَنْتِ', correct: 'تَجْلِسِيْنَ', incorrect: ['أَجْلِسُ', 'تَجْلِسُ', 'نَجْلِسُ'] },
+            { dhamir: 'نَحْنُ', correct: 'نَقْرَأُ', incorrect: ['أَقْرَأُ', 'تَقْرَأُ', 'تَقْرَأِيْنَ'] },
+            { dhamir: 'أَنَا', correct: 'أَشْرَبُ', incorrect: ['تَشْرَبُ', 'تَشْرَبِيْنَ', 'نَشْرَبُ'] },
+            { dhamir: 'أَنْتَ', correct: 'تَأْكُلُ', incorrect: ['آكُلُ', 'تَأْكُلِيْنَ', 'نَأْكُلُ'] },
+        ];
+        
+        let catcher, fallingWords, currentRound, score, lives, gameInterval, isGameOver;
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        function initGame() {
+            resizeCanvas();
+            catcher = { x: canvas.width / 2 - 50, y: canvas.height - 40, width: 100, height: 20, speed: 15 };
+            fallingWords = [];
+            score = 0;
+            lives = 3;
+            isGameOver = true;
+            updateUI();
+        }
+
+        function startGame() {
+            initGame();
+            isGameOver = false;
+            gameOverlay.style.display = 'none';
+            nextRound();
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+        }
+
+        function nextRound() {
+            fallingWords = [];
+            currentRound = gameWords[Math.floor(Math.random() * gameWords.length)];
+            
+            let wordsToDrop = [...currentRound.incorrect];
+            wordsToDrop.push(currentRound.correct);
+            wordsToDrop = wordsToDrop.sort(() => Math.random() - 0.5);
+
+            wordsToDrop.forEach((word, index) => {
+                setTimeout(() => {
+                    if(!isGameOver) createWord(word);
+                }, index * 1500);
+            });
+        }
+        
+        function createWord(text) {
+             fallingWords.push({
+                text: text,
+                x: Math.random() * (canvas.width - 80),
+                y: -30,
+                speed: 1 + Math.random() * 1.5,
+                isCorrect: text === currentRound.correct
+            });
+        }
+
+        function gameLoop() {
+            if (isGameOver) return;
+            update();
+            draw();
+        }
+
+        function update() {
+            fallingWords.forEach((word, index) => {
+                word.y += word.speed;
+
+                if (word.y > canvas.height) {
+                    fallingWords.splice(index, 1);
+                }
+
+                if (word.x < catcher.x + catcher.width &&
+                    word.x + 80 > catcher.x &&
+                    word.y < catcher.y + catcher.height &&
+                    word.y + 30 > catcher.y) {
+                    
+                    if (word.isCorrect) {
+                        score += 10;
+                    } else {
+                        lives -= 1;
+                    }
+                    updateUI();
+                    fallingWords.splice(index, 1);
+                    if (fallingWords.length === 0 && lives > 0) {
+                        setTimeout(nextRound, 1000);
+                    }
+                }
+            });
+            
+            if (lives <= 0) {
+                endGame("Game Over!");
+            }
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Catcher
+            ctx.fillStyle = '#0369a1';
+            ctx.fillRect(catcher.x, catcher.y, catcher.width, catcher.height);
+            ctx.fillStyle = '#0ea5e9';
+            ctx.fillRect(catcher.x + 5, catcher.y - 10, catcher.width - 10, 10);
+
+            // Draw Falling Words
+            ctx.font = "bold 24px 'Noto Sans Arabic'";
+            fallingWords.forEach(word => {
+                ctx.fillStyle = '#334155';
+                ctx.fillText(word.text, word.x, word.y);
+            });
+
+            // Draw Dhamir
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.fillRect(0, 0, canvas.width, 40);
+            ctx.font = "bold 28px 'Noto Sans Arabic'";
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            if(currentRound) {
+                ctx.fillText(`Dhamir: ${currentRound.dhamir}`, canvas.width / 2, 30);
+            }
+        }
+        
+        function updateUI() {
+            scoreEl.textContent = score;
+            livesEl.textContent = lives;
+        }
+
+        function endGame(message) {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            gameOverlay.style.display = 'flex';
+            gameStatusText.textContent = message;
+            startGameBtn.textContent = 'Main Lagi';
+        }
+
+        function moveCatcher(e) {
+            if (isGameOver) return;
+            if (e.key === 'ArrowLeft' && catcher.x > 0) {
+                catcher.x -= catcher.speed;
+            } else if (e.key === 'ArrowRight' && catcher.x < canvas.width - catcher.width) {
+                catcher.x += catcher.speed;
+            }
+        }
+        
+        window.addEventListener('keydown', moveCatcher);
+        startGameBtn.addEventListener('click', startGame);
+        window.addEventListener('resize', () => {
+            if(!isGameOver) {
+                endGame("Ukuran layar berubah. Mulai lagi ya!");
+            } else {
+                resizeCanvas();
+            }
+        });
+        // --- GAME LOGIC END ---
+
+        window.onload = () => {
+            // Apply common styles to buttons
+            document.querySelectorAll('.tab-btn, .btn-primary').forEach(btn => {
+                if (btn.classList.contains('tab-btn')) {
+                    btn.classList.add('px-4', 'py-2', 'text-sm', 'sm:text-base', 'font-semibold', 'rounded-full', 'border-2', 'border-stone-300', 'text-stone-600', 'hover:bg-sky-100', 'transition-colors');
+                }
+                if (btn.classList.contains('btn-primary')) {
+                    btn.classList.add('px-5', 'py-2.5', 'bg-amber-500', 'text-white', 'font-bold', 'rounded-lg', 'hover:bg-amber-600', 'transition-colors', 'shadow');
+                }
+            });
+
+            initLatihan();
+            initKuis();
+            initGame();
+        };
+    </script>
+</body>
+</html>
+
