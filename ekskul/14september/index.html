@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Bahasa Arab - Al Arabiyyah Baina Yadai Auladina (Hal 16-26)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            color: #334155;
+        }
+        .title-font { font-family: 'Fredoka', sans-serif; font-weight: 600; }
+        .arabic-text {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-size: 2.25rem;
+            direction: rtl;
+        }
+        .quiz-nav-btn {
+            transition: all 0.2s ease-in-out;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-bottom-width: 5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .quiz-nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .quiz-nav-btn:active:not(:disabled), .quiz-nav-btn.active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+            filter: brightness(0.95);
+        }
+        .quiz-nav-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .feedback { transition: all 0.3s ease; }
+
+        .card { perspective: 1000px; }
+        .card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s; transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card.preview .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-radius: 0.75rem;
+            padding: 4px;
+            text-align: center; /* Ensures text is centered */
+        }
+        .card-front { background-color: #fca5a5; border: 4px solid #f87171; }
+        .card-back {
+            background-color: #6ee7b7; border: 4px solid #34d399;
+            color: #1f2937; transform: rotateY(180deg);
+        }
+        /* REVISI FONT SIZE KARTU */
+        .card-back .arabic-text { font-size: 2.5rem; line-height: 1; } /* For single letters */
+        .card-back .arabic-text-sm { font-size: 1.5rem; line-height: 1.2; } /* For words */
+        
+        .correct-pulse { animation: pulse-green 0.8s; }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(52, 211, 153, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+        }
+        
+        .incorrect-shake { animation: shake-red 0.5s; }
+        @keyframes shake-red {
+            10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .no-clicks { pointer-events: none; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="container mx-auto p-4 md:p-6 max-w-5xl">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-700 title-font flex flex-col items-center justify-center gap-2">
+                <i class="fa-solid fa-shapes text-amber-500 text-4xl"></i>
+                <span>Quiz Bahasa Arab</span>
+                <span class="text-xl md:text-2xl text-slate-500">Al Arabiyyah Baina Yadai Auladina (Hal 16-26)</span>
+            </h1>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-3 mb-6">
+            <button onclick="showQuiz('quiz1', this)" class="quiz-nav-btn active" style="background-color: #3B82F6; border-color: #1D4ED8;"><i class="fa-solid fa-volume-high mr-2"></i>Bunyi</button>
+            <button onclick="showQuiz('quiz2', this)" class="quiz-nav-btn" style="background-color: #22C55E; border-color: #15803D;"><i class="fa-solid fa-clone mr-2"></i>Pasangan Huruf</button>
+            <button onclick="showQuiz('quiz3', this)" class="quiz-nav-btn" style="background-color: #10B981; border-color: #047857;"><i class="fa-solid fa-file-word mr-2"></i>Pasangan Kata</button>
+            <button onclick="showQuiz('quiz4', this)" class="quiz-nav-btn" style="background-color: #F59E0B; border-color: #B45309;"><i class="fa-solid fa-cubes-stacked mr-2"></i>Susun</button>
+            <button onclick="showQuiz('quiz5', this)" class="quiz-nav-btn" style="background-color: #EF4444; border-color: #B91C1C;"><i class="fa-solid fa-magnifying-glass mr-2"></i>Beda</button>
+            <button onclick="showQuiz('quiz6', this)" class="quiz-nav-btn" style="background-color: #A855F7; border-color: #7E22CE;"><i class="fa-solid fa-pen-to-square mr-2"></i>Lengkapi</button>
+            <button onclick="showQuiz('quiz7', this)" class="quiz-nav-btn" style="background-color: #14B8A6; border-color: #0F766E;"><i class="fa-solid fa-thumbs-up mr-2"></i>Benar/Salah</button>
+        </nav>
+
+        <main id="quiz-container" class="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg min-h-[450px] transition-opacity duration-300">
+            <!-- Konten Kuis akan di-generate oleh JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // --- TEMPLATE HTML UNTUK SETIAP KUIS ---
+        const quizTemplates = {
+            quiz1: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz1-q-num" class="font-bold"></span><span id="quiz1-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-2 title-font">Quiz 1: Lawan Kata Bunyi</h2><p class="text-slate-500 mb-4 text-center">Pilih kata yang bunyinya paling mirip!</p><div id="quiz1-content"><div id="quiz1-question-card" class="bg-blue-100 shadow-md rounded-2xl p-4 border-2 border-blue-300 mb-6"><p class="arabic-text font-bold text-slate-800" id="quiz1-question"></p></div><div id="quiz1-options" class="flex flex-col md:flex-row gap-6 w-full max-w-md"></div></div><div id="quiz1-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div></div>`,
+            quiz2: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 2: Pasangan Huruf</h2><div id="quiz2-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz2-board" class="grid grid-cols-4 gap-4 max-w-xl mx-auto"></div><div id="quiz2-controls" class="text-center mt-6"></div></div>`,
+            quiz3: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 3: Pasangan Kata</h2><div id="quiz3-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz3-board" class="grid grid-cols-4 gap-4 max-w-xl mx-auto"></div><div id="quiz3-controls" class="text-center mt-6"></div></div>`,
+            quiz4: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz4-q-num" class="font-bold"></span><span id="quiz4-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 4: Susun Kalimat</h2><p class="text-center text-slate-500 mb-4">Klik kata untuk menyusun kalimat!</p><div id="quiz4-content"><div id="quiz4-answer-box" class="bg-amber-100 p-4 rounded-lg text-center mb-4 min-h-[80px] arabic-text font-bold text-slate-800 text-3xl" dir="rtl"></div><div id="quiz4-words" class="flex flex-wrap justify-center gap-3 mb-4"></div><div class="flex justify-center gap-3"><button id="quiz4-help" class="quiz-nav-btn" style="background-color:#0284c7; border-color:#0369a1;"><i class="fa-solid fa-lightbulb mr-2"></i>Bantuan</button><button id="quiz4-check" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Periksa</button><button id="quiz4-clear" class="quiz-nav-btn" style="background-color:#94a3b8; border-color:#475569;">Hapus</button></div></div><div id="quiz4-feedback" class="mt-4 text-center text-2xl font-bold feedback"></div><div id="quiz4-info" class="mt-2 text-center text-lg text-slate-500 h-16 transition-opacity duration-500 opacity-0 flex items-center justify-center gap-3"></div></div>`,
+            quiz5: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz5-q-num" class="font-bold"></span><span id="quiz5-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 5: Pilih yang Beda</h2><p class="text-center text-slate-500 mb-4">Klik kotak yang isinya berbeda!</p><div id="quiz5-content"><div id="quiz5-items" class="flex flex-wrap justify-center gap-4 w-full max-w-lg mx-auto mt-8"></div></div><div id="quiz5-feedback" class="mt-8 text-center text-2xl font-bold feedback"></div></div>`,
+            quiz6: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz6-q-num" class="font-bold"></span><span id="quiz6-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-2 title-font">Quiz 6: Lengkapi Kalimat</h2><p class="text-slate-500 mb-6 text-center">Pilih kata untuk mengisi bagian yang kosong!</p><div id="quiz6-content"><div id="quiz6-question-card" class="bg-purple-100 shadow-md rounded-2xl p-6 border-2 border-purple-300 mb-6 flex justify-center items-center"><p class="arabic-text font-bold text-slate-800 text-4xl" id="quiz6-question"></p></div><div id="quiz6-options" class="flex flex-col md:flex-row gap-4 w-full max-w-lg mx-auto"></div></div><div id="quiz6-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div></div>`,
+            quiz7: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz7-q-num" class="font-bold"></span><span id="quiz7-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-2 title-font">Quiz 7: Benar atau Salah?</h2><p class="text-slate-500 mb-6 text-center">Perhatikan gambar dan kalimatnya. Apakah sudah benar?</p><div id="quiz7-content"><div id="quiz7-question-card" class="bg-teal-100 shadow-md rounded-2xl p-6 border-2 border-teal-300 mb-6 flex flex-col justify-center items-center text-center min-h-[180px]"><div id="quiz7-image" class="mb-4"></div><p class="arabic-text font-bold text-slate-800 text-4xl" id="quiz7-statement"></p></div><div id="quiz7-options" class="flex justify-center gap-6 w-full max-w-sm mx-auto"><button id="quiz7-btn-true" class="quiz-nav-btn text-2xl w-full" style="background-color:#22c55e; border-color:#16a34a;"><i class="fa-solid fa-check mr-2"></i> Shahih</button><button id="quiz7-btn-false" class="quiz-nav-btn text-2xl w-full" style="background-color:#ef4444; border-color:#b91c1c;"><i class="fa-solid fa-times mr-2"></i> Khoto'</button></div></div><div id="quiz7-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div></div>`
+        };
+
+        const quizStates = {};
+
+        const masterData = {
+            quiz1: [ { q: "طَابَ", o: ["تَابَ", "ذَابَ"], a: "تَابَ" }, { q: "طَالَ", o: ["تَالَ", "قَالَ"], a: "تَالَ" }, { q: "طَرَف", o: ["تَرَف", "عَرَف"], a: "تَرَف" }, { q: "فِطْنَة", o: ["فِتْنَة", "فِكْرَة"], a: "فِتْنَة" }, { q: "شَطّ", o: ["شَتّ", "شَكّ"], a: "شَتّ" }, { q: "خَبَطَ", o: ["خَبَتَ", "خَرَجَ"], a: "خَبَتَ" }, { q: "كَامِل", o: ["خَامِل", "جَامِل"], a: "خَامِل" }, { q: "كَال", o: ["خَال", "قَالَ"], a: "خَال" }, { q: "شَكَرَ", o: ["شَخَرَ", "شَجَرَ"], a: "شَخَرَ" }, { q: "كَبِير", o: ["خَبِير", "جَبِير"], a: "خَبِير" } ],
+            quiz2: ["خ", "ك", "ر", "ز", "و", "ط", "ت", "ح", "ه", "د", "ذ", "أ"],
+            quiz3: [ { a: "طَابَ", b: "تَابَ" }, { a: "كَامِل", b: "خَامِل" }, { a: "شَطّ", b: "شَتّ" }, { a: "طَرَف", b: "تَرَف" }, { a: "أَنْتَ", b: "أَنَا" }, { a: "كَيْفَ", b: "حَالُكَ" }, { a: "شَكَرَ", b: "شَخَرَ" }, { a: "خَبِير", b: "كَبِير" }, { a: "حَالُكَ", b: "حَالُكِ" }, { a: "اسْمُكَ", b: "اسْمُكِ" } ],
+            quiz4: [ { s: "كَيْفَ حَالُكَ؟", w: ["كَيْفَ", "حَالُكَ؟"], t: "Bagaimana kabarmu? (lk)", i: "fa-solid fa-question-circle" }, { s: "أَنَا بِخَيْرٍ", w: ["أَنَا", "بِخَيْرٍ"], t: "Saya baik-baik saja", i: "fa-solid fa-smile-beam" }, { s: "وَكَيْفَ حَالُكَ أَنْتَ؟", w: ["وَكَيْفَ", "حَالُكَ", "أَنْتَ؟"], t: "Dan bagaimana kabarmu?", i: "fa-solid fa-user-astronaut" }, { s: "السَّلَامُ عَلَيْكُمْ", w: ["السَّلَامُ", "عَلَيْكُمْ"], t: "Semoga keselamatan dilimpahkan atasmu.", i: "fa-solid fa-peace" } ],
+            quiz5: [ { i: ["ط", "ط", "ت", "ط"], a: "ت" }, { i: ["ك", "خ", "ك", "ك"], a: "خ" }, { i: ["ر", "ز", "ر", "ر"], a: "ز" }, { i: ["طَابَ", "طَابَ", "تَابَ", "طَابَ"], a: "تَابَ" }, { i: ["كَامِل", "خَامِل", "كَامِل", "كَامِل"], a: "خَامِل" } ],
+            quiz6: [ { q: ["كَيْفَ", "______ ؟"], o: ["حَالُكَ", "اسْمُكَ", "أَنَا"], a: "حَالُكَ" }, { q: ["أَنَا", "______"], o: ["بِخَيْرٍ", "كَيْفَ", "أَنْتَ"], a: "بِخَيْرٍ" }, { q: ["وَكَيْفَ حَالُكَ", "______ ؟"], o: ["أَنْتَ", "أَنَا", "اسْمُكَ"], a: "أَنْتَ" }, { q: ["أَنَا بِخَيْرٍ، وَالْحَمْدُ", "______"], o: ["لِلَّهِ", "أَنْتَ", "حَالُكَ"], a: "لِلَّهِ" }, { q: ["مَا", "______ ؟"], o: ["اسْمُكِ", "حَالُكَ", "أَنْتِ"], a: "اسْمُكِ" } ],
+            quiz7: [ { img: `<i class="fa-solid fa-child text-7xl text-blue-500"></i>`, st: 'كَيْفَ حَالُكَ؟', a: true }, { img: `<i class="fa-solid fa-child-dress text-7xl text-pink-400"></i>`, st: 'كَيْفَ حَالُكَ؟', a: false }, { img: `<i class="fa-solid fa-child text-7xl text-blue-500"></i>`, st: 'أَنْتَ', a: true }, { img: `<i class="fa-solid fa-child-dress text-7xl text-pink-400"></i>`, st: 'أَنْتَ', a: false } ]
+        };
+        
+        const appreciation = ['MasyaAllah! 👍', 'Barakallahu fiik! ✨', 'Ahsantum! 🎉', 'Mumtaz! ✅'];
+
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]]; } return array; }
+        function setupQuiz(quizId, data) { quizStates[quizId] = { data: shuffleArray([...data]), unaskedIndices: Array.from(Array(data.length).keys()), score: 0, currentQIndex: -1, totalQuestions: data.length }; }
+        function getNextQuestion(quizId) { const state = quizStates[quizId]; if (!state || state.unaskedIndices.length === 0) { return null; } const randIndex = Math.floor(Math.random() * state.unaskedIndices.length); const questionIndex = state.unaskedIndices.splice(randIndex, 1)[0]; state.currentQIndex = questionIndex; return state.data[questionIndex]; }
+        
+        function initQuiz1() { const question = getNextQuestion('quiz1'); const state = quizStates.quiz1; const contentEl = document.getElementById('quiz1-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz1')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz1-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz1-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz1-question").textContent = question.q; const optionsContainer = document.getElementById("quiz1-options"); optionsContainer.innerHTML = ""; document.getElementById("quiz1-feedback").innerHTML = ""; const colors = [{bg: '#3b82f6', border: '#1d4ed8'}, {bg: '#ef4444', border: '#b91c1c'}]; shuffleArray([...question.o]).forEach((opt, index) => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-3xl">${opt}</span>`; btn.className = "quiz-nav-btn text-center transform p-4 w-full"; const color = colors[index % colors.length]; btn.style.backgroundColor = color.bg; btn.style.borderColor = color.border; btn.onclick = () => checkQuiz1Answer(opt, btn); optionsContainer.appendChild(btn); }); }
+        function checkQuiz1Answer(answer, btn) { const feedbackEl = document.getElementById("quiz1-feedback"); const state = quizStates.quiz1; const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-green-600 feedback h-8"; btn.classList.add("correct-pulse"); } else { feedbackEl.textContent = "Kurang Tepat, Coba Lagi! 😥"; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-red-600 feedback h-8"; btn.classList.add("incorrect-shake"); } document.getElementById('quiz1-options').classList.add('no-clicks'); setTimeout(() => { btn.classList.remove("correct-pulse", "incorrect-shake"); document.getElementById('quiz1-options').classList.remove('no-clicks'); initQuiz1(); }, 1500); }
+        
+        function initMemoryGame(quizId, data, size, textClass) { const board = document.getElementById(`${quizId}-board`); const controls = document.getElementById(`${quizId}-controls`); if (!board || !controls) return; board.innerHTML = ''; controls.innerHTML = `<button id="${quizId}-start-btn" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Mulai!</button>`; document.getElementById(`${quizId}-start-btn`).onclick = () => { startGame(quizId, data, size, textClass); }; }
+        function startGame(quizId, data, size, textClass) { const board = document.getElementById(`${quizId}-board`); const controls = document.getElementById(`${quizId}-controls`); const timerEl = document.getElementById(`${quizId}-timer`); controls.innerHTML = `<p class="text-lg text-slate-600">Pasangan Ditemukan: <span id="${quizId}-matches" class="font-bold">0</span> / ${size/2}</p><div id="${quizId}-feedback" class="mt-4 text-center text-2xl font-bold feedback h-8"></div>`; let items = []; if (quizId === 'quiz2') { items = shuffleArray([...data]).slice(0, size / 2); items = [...items, ...items]; } else { const pairs = shuffleArray([...data]).slice(0, size / 2); items = pairs.flatMap(p => [p.a, p.b]); } shuffleArray(items); board.innerHTML = ''; items.forEach((item) => { const card = document.createElement("div"); card.className = "card h-24 w-full cursor-pointer preview"; card.dataset.value = item; if (quizId === 'quiz3') { const pair = data.find(p => p.a === item || p.b === item); card.dataset.pairId = pair.a; } else { card.dataset.pairId = item; } card.innerHTML = `<div class="card-inner"><div class="card-front"><i class="fa-solid fa-star text-white text-4xl"></i></div><div class="card-back arabic-text ${textClass}">${item}</div></div>`; if(quizId === 'quiz3') { const front = card.querySelector('.card-front'); const back = card.querySelector('.card-back'); front.style.backgroundColor = '#c084fc'; front.style.borderColor = '#9333ea'; back.style.backgroundColor = '#f59e0b'; back.style.borderColor = '#b45309'; } board.appendChild(card); }); let countdown = 10; timerEl.textContent = `Ingat posisinya! ${countdown}`; const interval = setInterval(() => { countdown--; timerEl.textContent = `Ingat posisinya! ${countdown}`; if (countdown <= 0) { clearInterval(interval); timerEl.textContent = ''; document.querySelectorAll(`#${quizId}-board .card`).forEach(card => { card.classList.remove('preview'); card.onclick = () => flipCard(card, quizId, size / 2, data, size, textClass); }); } }, 1000); }
+        let flippedCards = []; let matchedPairs = 0;
+        function flipCard(card, quizId, totalPairs, data, size, textClass) { if (document.body.classList.contains("no-clicks") || card.classList.contains("flipped")) return; card.classList.add("flipped"); flippedCards.push(card); if (flippedCards.length === 2) { document.body.classList.add("no-clicks"); setTimeout(() => checkMemoryMatch(quizId, totalPairs, data, size, textClass), 1000); } }
+        function checkMemoryMatch(quizId, totalPairs, data, size, textClass) { const [card1, card2] = flippedCards; if (card1.dataset.pairId === card2.dataset.pairId) { matchedPairs++; document.getElementById(`${quizId}-matches`).textContent = matchedPairs; if (matchedPairs === totalPairs) { const feedbackEl = document.getElementById(`${quizId}-feedback`); feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-green-600 feedback h-8"; document.getElementById(`${quizId}-controls`).innerHTML += `<button onclick="initMemoryGame('${quizId}', masterData['${quizId}'], ${size}, '${textClass}')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button>`; } } else { card1.classList.remove("flipped"); card2.classList.remove("flipped"); } flippedCards = []; document.body.classList.remove("no-clicks"); }
+        
+        let quiz4Answer = [];
+        function initQuiz4() { const question = getNextQuestion('quiz4'); const state = quizStates.quiz4; const contentEl = document.getElementById('quiz4-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz4')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz4-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz4-score").textContent = `Skor: ${state.score}`; const wordsContainer = document.getElementById("quiz4-words"); const answerBox = document.getElementById("quiz4-answer-box"); wordsContainer.innerHTML = ""; answerBox.textContent = ""; quiz4Answer = []; document.getElementById("quiz4-feedback").innerHTML = ""; document.getElementById("quiz4-info").classList.add("opacity-0"); const helpBtn = document.getElementById("quiz4-help"); helpBtn.disabled = false; helpBtn.classList.remove("opacity-50"); shuffleArray([...question.w]).forEach(word => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${word}</span>`; btn.className = "quiz-nav-btn p-3"; btn.style.backgroundColor = "#f59e0b"; btn.style.borderColor = "#b45309"; btn.onclick = () => { quiz4Answer.push(word); answerBox.textContent = quiz4Answer.join(" "); btn.disabled = true; btn.classList.add("opacity-50"); }; wordsContainer.appendChild(btn); }); }
+        function checkQuiz4Answer() { const feedbackEl = document.getElementById("quiz4-feedback"); const infoBox = document.getElementById("quiz4-info"); const state = quizStates.quiz4; const correct = quiz4Answer.join(" ") === state.data[state.currentQIndex].s; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-green-600 feedback"; const currentQ = state.data[state.currentQIndex]; infoBox.innerHTML = `<i class="${currentQ.i} text-3xl text-slate-500"></i> <p>"${currentQ.t}"</p>`; infoBox.classList.remove("opacity-0"); } else { feedbackEl.textContent = "Belum Benar, Coba Lagi!"; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-red-600 feedback"; } document.getElementById('quiz4-content').classList.add('no-clicks'); setTimeout(() => { document.getElementById('quiz4-content').classList.remove('no-clicks'); initQuiz4(); }, 2500); }
+        
+        function initQuiz5() { const question = getNextQuestion('quiz5'); const state = quizStates.quiz5; const contentEl = document.getElementById('quiz5-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz5')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz5-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz5-score").textContent = `Skor: ${state.score}`; const itemsContainer = document.getElementById("quiz5-items"); itemsContainer.innerHTML = ""; document.getElementById("quiz5-feedback").innerHTML = ""; const colorPalette = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#818cf8", "#c084fc", "#f472b6"]; const shuffledItems = shuffleArray([...question.i]); const shuffledColors = shuffleArray([...colorPalette]); shuffledItems.forEach((item, index) => { const btn = document.createElement("button"); const isWord = item.length > 1; const textSize = isWord ? "text-2xl" : "text-4xl"; const boxSize = isWord ? "w-40 h-28" : "w-24 h-24"; const color = shuffledColors[index % shuffledColors.length]; btn.innerHTML = `<span class="arabic-text ${textSize}">${item}</span>`; btn.className = `quiz-nav-btn text-white ${boxSize} rounded-xl flex items-center justify-center transition-transform transform hover:scale-105`; btn.style.backgroundColor = color; btn.style.borderColor = "transparent"; btn.onclick = () => checkQuiz5Answer(item, btn); itemsContainer.appendChild(btn); }); }
+        function checkQuiz5Answer(answer, btn) { const feedbackEl = document.getElementById("quiz5-feedback"); const state = quizStates.quiz5; const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-8 text-center text-2xl font-bold text-green-600 feedback"; btn.classList.add("correct-pulse"); } else { feedbackEl.textContent = "Bukan yang itu! ❌"; feedbackEl.className = "mt-8 text-center text-2xl font-bold text-red-600 feedback"; btn.classList.add("incorrect-shake"); } document.getElementById('quiz5-items').classList.add('no-clicks'); setTimeout(() => { btn.classList.remove("correct-pulse", "incorrect-shake"); document.getElementById('quiz5-items').classList.remove('no-clicks'); initQuiz5(); }, 1500); }
+
+        function initQuiz6() { const question = getNextQuestion('quiz6'); const state = quizStates.quiz6; const contentEl = document.getElementById('quiz6-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz6')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz6-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz6-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz6-question").textContent = question.q.join(" ______ "); const optionsContainer = document.getElementById("quiz6-options"); optionsContainer.innerHTML = ""; document.getElementById("quiz6-feedback").innerHTML = ""; shuffleArray([...question.o]).forEach(opt => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${opt}</span>`; btn.className = "quiz-nav-btn w-full p-4"; btn.style.backgroundColor = '#a855f7'; btn.style.borderColor = '#7e22ce'; btn.onclick = () => checkQuiz6Answer(opt, btn); optionsContainer.appendChild(btn); }); }
+        function checkQuiz6Answer(answer, btn) { const feedbackEl = document.getElementById("quiz6-feedback"); const state = quizStates.quiz6; const questionEl = document.getElementById("quiz6-question"); const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-green-600 feedback h-8"; btn.classList.add("correct-pulse"); questionEl.textContent = state.data[state.currentQIndex].q.join(` ${answer} `); } else { feedbackEl.textContent = "Oops, Coba Lagi! 👾"; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-red-600 feedback h-8"; btn.classList.add("incorrect-shake"); } document.getElementById('quiz6-options').classList.add('no-clicks'); setTimeout(() => { btn.classList.remove("correct-pulse", "incorrect-shake"); document.getElementById('quiz6-options').classList.remove('no-clicks'); initQuiz6(); }, 2000); }
+
+        function initQuiz7() { const question = getNextQuestion('quiz7'); const state = quizStates.quiz7; const contentEl = document.getElementById('quiz7-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz7')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz7-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz7-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz7-image").innerHTML = question.img; document.getElementById("quiz7-statement").textContent = question.st; document.getElementById("quiz7-feedback").innerHTML = ""; }
+        function checkQuiz7Answer(answer) { const feedbackEl = document.getElementById("quiz7-feedback"); const state = quizStates.quiz7; const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-green-600 feedback h-8"; } else { feedbackEl.textContent = "Hampir Benar, Coba Lagi!"; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-red-600 feedback h-8"; } document.getElementById('quiz7-options').classList.add('no-clicks'); setTimeout(() => { document.getElementById('quiz7-options').classList.remove('no-clicks'); initQuiz7(); }, 1500); }
+        
+        function showQuiz(quizId, btnElement) {
+            const container = document.getElementById('quiz-container');
+            container.style.opacity = 0;
+            const initFunctions = {
+                quiz1: initQuiz1, quiz2: () => initMemoryGame('quiz2', masterData.quiz2, 12, 'arabic-text'),
+                quiz3: () => initMemoryGame('quiz3', masterData.quiz3, 12, 'arabic-text-sm'), quiz4: initQuiz4,
+                quiz5: initQuiz5, quiz6: initQuiz6, quiz7: initQuiz7
+            };
+            
+            setTimeout(() => {
+                if (btnElement) {
+                    document.querySelectorAll('.quiz-nav-btn').forEach(btn => btn.classList.remove('active'));
+                    btnElement.classList.add('active');
+                }
+                
+                if (quizId === 'quiz2' || quizId === 'quiz3') {
+                    flippedCards = []; matchedPairs = 0;
+                }
+                
+                container.innerHTML = quizTemplates[quizId];
+                
+                if(!quizStates[quizId] || quizStates[quizId].unaskedIndices.length === 0){
+                    setupQuiz(quizId, masterData[quizId]);
+                }
+
+                initFunctions[quizId]();
+                
+                if (quizId === 'quiz4') {
+                    document.getElementById('quiz4-check').onclick = checkQuiz4Answer;
+                    document.getElementById('quiz4-clear').onclick = () => { quizStates['quiz4'].unaskedIndices.push(quizStates['quiz4'].currentQIndex); initQuiz4();};
+                    document.getElementById('quiz4-help').onclick = () => {
+                        const infoBox = document.getElementById("quiz4-info");
+                        const state = quizStates.quiz4;
+                        const currentQ = state.data[state.currentQIndex];
+                        infoBox.innerHTML = `<i class="${currentQ.i} text-3xl text-slate-500"></i> <p>Artinya: "${currentQ.t}"</p>`;
+                        infoBox.classList.remove("opacity-0");
+                        document.getElementById('quiz4-help').disabled = true;
+                        document.getElementById('quiz4-help').classList.add("opacity-50");
+                    };
+                }
+                if (quizId === 'quiz7') {
+                    document.getElementById('quiz7-btn-true').onclick = () => checkQuiz7Answer(true);
+                    document.getElementById('quiz7-btn-false').onclick = () => checkQuiz7Answer(false);
+                }
+
+                container.style.opacity = 1;
+            }, 200);
+        }
+        
+        window.onload = () => {
+            showQuiz('quiz1', document.querySelector('button[onclick*="quiz1"]'));
+        };
+    </script>
+</body>
+</html>
+
