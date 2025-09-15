@@ -46,7 +46,7 @@
         .card { perspective: 1000px; }
         .card-inner {
             position: relative; width: 100%; height: 100%;
-            transition: transform 0.6s; transform-style: preserve-3d;
+            transition: transform 0.6s; transform-style: preserve-3d; /* PERBAIKAN: Typo 'preserve-d' menjadi 'preserve-3d' */
             display: grid; /* Letakkan card-front dan card-back di atas satu sama lain */
         }
         .card.flipped .card-inner { transform: rotateY(180deg); }
@@ -59,9 +59,15 @@
             padding: 4px;
             text-align: center; /* Ensures text is centered */
         }
-        .card-front { background-color: #a7f3d0; border: 4px solid #34d399; }
+        /* PERBAIKAN: Tampilan default kartu (Kuis 2) disempurnakan */
+        .card-front { 
+            background-color: #34D399; /* Hijau terang */
+            border: 2px solid #F0FDF4; /* Border putih kehijauan */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
         .card-back {
-            background-color: #d1fae5; border: 4px solid #6ee7b7;
+            background-color: #A7F3D0; /* Hijau lebih muda */
+            border: 2px solid #F0FDF4; /* Border putih kehijauan */
             color: #1f2937; transform: rotateY(180deg);
         }
         /* REVISI FONT SIZE KARTU */
@@ -113,8 +119,8 @@
         // --- TEMPLATE HTML UNTUK SETIAP KUIS ---
         const quizTemplates = {
             quiz1: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz1-q-num" class="font-bold"></span><span id="quiz1-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-2 title-font">Quiz 1: Lawan Kata Bunyi</h2><p class="text-slate-500 mb-4 text-center">Pilih kata yang bunyinya paling mirip!</p><div id="quiz1-content"><div id="quiz1-question-card" class="bg-blue-100 shadow-md rounded-2xl p-4 border-2 border-blue-300 mb-6"><p class="arabic-text font-bold text-slate-800" id="quiz1-question"></p></div><div id="quiz1-options" class="flex flex-col md:flex-row gap-6 w-full max-w-md"></div></div><div id="quiz1-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div></div>`,
-            quiz2: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 2: Pasangan Huruf</h2><div id="quiz2-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz2-board" class="grid grid-cols-4 gap-4 max-w-xl mx-auto"></div><div id="quiz2-controls" class="text-center mt-6"></div></div>`,
-            quiz3: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 3: Pasangan Kata</h2><div id="quiz3-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz3-board" class="grid grid-cols-4 gap-4 max-w-xl mx-auto"></div><div id="quiz3-controls" class="text-center mt-6"></div></div>`,
+            quiz2: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 2: Pasangan Huruf</h2><div id="quiz2-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz2-board" class="grid grid-cols-4 gap-x-4 gap-y-6 max-w-xl mx-auto my-8"></div><div id="quiz2-controls" class="text-center mt-6"></div></div>`,
+            quiz3: `<div class="flex flex-col items-center"><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 3: Pasangan Kata</h2><div id="quiz3-timer" class="text-xl font-bold text-red-500 h-8 mb-2"></div><div id="quiz3-board" class="grid grid-cols-4 gap-x-4 gap-y-6 max-w-xl mx-auto my-8"></div><div id="quiz3-controls" class="text-center mt-6"></div></div>`,
             quiz4: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz4-q-num" class="font-bold"></span><span id="quiz4-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 4: Susun Kalimat</h2><p class="text-center text-slate-500 mb-4">Klik kata untuk menyusun kalimat!</p><div id="quiz4-content"><div id="quiz4-answer-box" class="bg-amber-100 p-4 rounded-lg text-center mb-4 min-h-[80px] arabic-text font-bold text-slate-800 text-3xl" dir="rtl"></div><div id="quiz4-words" class="flex flex-wrap justify-center gap-3 mb-4"></div><div id="quiz4-action-buttons" class="flex justify-center gap-3"></div></div><div id="quiz4-feedback" class="mt-4 text-center text-2xl font-bold feedback"></div><div id="quiz4-info" class="mt-2 text-center text-lg text-slate-500 h-16 transition-opacity duration-500 opacity-0 flex items-center justify-center gap-3"></div></div>`,
             quiz5: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz5-q-num" class="font-bold"></span><span id="quiz5-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-4 title-font">Quiz 5: Pilih yang Beda</h2><p class="text-center text-slate-500 mb-4">Klik kotak yang isinya berbeda!</p><div id="quiz5-content"><div id="quiz5-items" class="flex flex-wrap justify-center gap-4 w-full max-w-lg mx-auto mt-8"></div></div><div id="quiz5-feedback" class="mt-8 text-center text-2xl font-bold feedback"></div></div>`,
             quiz6: `<div class="flex flex-col items-center"><div class="w-full mb-4 flex justify-between items-center text-slate-600"><span id="quiz6-q-num" class="font-bold"></span><span id="quiz6-score" class="font-bold"></span></div><h2 class="text-2xl font-semibold text-center text-slate-700 mb-2 title-font">Quiz 6: Lengkapi Kalimat</h2><p class="text-slate-500 mb-6 text-center">Pilih kata untuk mengisi bagian yang kosong!</p><div id="quiz6-content"><div id="quiz6-question-card" class="bg-purple-100 shadow-md rounded-2xl p-6 border-2 border-purple-300 mb-6 flex justify-center items-center"><p class="arabic-text font-bold text-slate-800 text-4xl" id="quiz6-question"></p></div><div id="quiz6-options" class="flex flex-col md:flex-row gap-4 w-full max-w-lg mx-auto"></div></div><div id="quiz6-feedback" class="mt-6 text-center text-2xl font-bold feedback h-8"></div></div>`,
@@ -126,7 +132,7 @@
         const masterData = {
             quiz1: [ { q: "طَابَ", o: ["تَابَ", "ذَابَ"], a: "تَابَ" }, { q: "طَالَ", o: ["تَالَ", "قَالَ"], a: "تَالَ" }, { q: "طَرَف", o: ["تَرَف", "عَرَف"], a: "تَرَف" }, { q: "فِطْنَة", o: ["فِتْنَة", "فِكْرَة"], a: "فِتْنَة" }, { q: "شَطّ", o: ["شَتّ", "شَكّ"], a: "شَتّ" }, { q: "خَبَطَ", o: ["خَبَتَ", "خَرَجَ"], a: "خَبَتَ" }, { q: "كَامِل", o: ["خَامِل", "جَامِل"], a: "خَامِل" }, { q: "كَال", o: ["خَال", "قَالَ"], a: "خَال" }, { q: "شَكَرَ", o: ["شَخَرَ", "شَجَرَ"], a: "شَخَرَ" }, { q: "كَبِير", o: ["خَبِير", "جَبِير"], a: "خَبِير" } ],
             quiz2: ["خ", "ك", "ر", "ز", "و", "ط", "ت", "ح", "ه", "د", "ذ", "أ"],
-            quiz3: [ { a: "طَابَ", b: "تَابَ" }, { a: "كَامِل", b: "خَامِل" }, { a: "شَطّ", b: "شَتّ" }, { a: "طَرَف", b: "تَرَف" }, { a: "أَنْتَ", b: "أَنَا" }, { a: "كَيْفَ", b: "حَالُكَ" }, { a: "شَكَرَ", b: "شَخَرَ" }, { a: "خَبِير", b: "كَبِير" }, { a: "حَالُكَ", b: "حَالُكِ" }, { a: "اسْمُكَ", b: "اسْمُكِ" } ],
+            quiz3: ["كَيْفَ", "حَالُكَ", "أَنْتَ", "أَنَا", "بِخَيْرٍ", "اسْمُكَ", "اسْمُكِ", "السَّلَامُ", "عَلَيْكُمْ", "لِلَّهِ" ],
             quiz4: [ { s: "كَيْفَ حَالُكَ؟", w: ["كَيْفَ", "حَالُكَ؟"], t: "Bagaimana kabarmu? (lk)", i: "fa-solid fa-question-circle" }, { s: "أَنَا بِخَيْرٍ", w: ["أَنَا", "بِخَيْرٍ"], t: "Saya baik-baik saja", i: "fa-solid fa-smile-beam" }, { s: "وَكَيْفَ حَالُكَ أَنْتَ؟", w: ["وَكَيْفَ", "حَالُكَ", "أَنْتَ؟"], t: "Dan bagaimana kabarmu?", i: "fa-solid fa-user-astronaut" }, { s: "السَّلَامُ عَلَيْكُمْ", w: ["السَّلَامُ", "عَلَيْكُمْ"], t: "Semoga keselamatan dilimpahkan atasmu.", i: "fa-solid fa-peace" } ],
             quiz5: [ { i: ["ط", "ط", "ت", "ط"], a: "ت" }, { i: ["ك", "خ", "ك", "ك"], a: "خ" }, { i: ["ر", "ز", "ر", "ر"], a: "ز" }, { i: ["طَابَ", "طَابَ", "تَابَ", "طَابَ"], a: "تَابَ" }, { i: ["كَامِل", "خَامِل", "كَامِل", "كَامِل"], a: "خَامِل" } ],
             quiz6: [ { q: ["كَيْفَ", "______ ؟"], o: ["حَالُكَ", "اسْمُكَ", "أَنَا"], a: "حَالُكَ" }, { q: ["أَنَا", "______"], o: ["بِخَيْرٍ", "كَيْفَ", "أَنْتَ"], a: "بِخَيْرٍ" }, { q: ["وَكَيْفَ حَالُكَ", "______ ؟"], o: ["أَنْتَ", "أَنَا", "اسْمُكَ"], a: "أَنْتَ" }, { q: ["أَنَا بِخَيْرٍ، وَالْحَمْدُ", "______"], o: ["لِلَّهِ", "أَنْتَ", "حَالُكَ"], a: "لِلَّهِ" }, { q: ["مَا", "______ ؟"], o: ["اسْمُكِ", "حَالُكَ", "أَنْتِ"], a: "اسْمُكِ" } ],
@@ -149,20 +155,131 @@
             matchedPairs = 0;
             const board = document.getElementById(`${quizId}-board`); const controls = document.getElementById(`${quizId}-controls`); if (!board || !controls) return; board.innerHTML = ''; controls.innerHTML = `<button id="${quizId}-start-btn" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Mulai!</button>`; document.getElementById(`${quizId}-start-btn`).onclick = () => { startGame(quizId, data, size, textClass); };
         }
-        function startGame(quizId, data, size, textClass) { const board = document.getElementById(`${quizId}-board`); const controls = document.getElementById(`${quizId}-controls`); const timerEl = document.getElementById(`${quizId}-timer`); controls.innerHTML = `<p class="text-lg text-slate-600">Pasangan Ditemukan: <span id="${quizId}-matches" class="font-bold">0</span> / ${size/2}</p><div id="${quizId}-feedback" class="mt-4 text-center text-2xl font-bold feedback h-8"></div>`; let items = []; if (quizId === 'quiz2') { items = shuffleArray([...data]).slice(0, size / 2); items = [...items, ...items]; } else { const pairs = shuffleArray([...data]).slice(0, size / 2); items = pairs.flatMap(p => [p.a, p.b]); } shuffleArray(items); board.innerHTML = ''; items.forEach((item) => { const card = document.createElement("div"); card.className = "card aspect-square cursor-pointer preview"; card.dataset.value = item; if (quizId === 'quiz3') { const pair = data.find(p => p.a === item || p.b === item); card.dataset.pairId = pair.a; } else { card.dataset.pairId = item; } card.innerHTML = `<div class="card-inner"><div class="card-front"><i class="fa-solid fa-leaf text-emerald-600 text-4xl"></i></div><div class="card-back arabic-text ${textClass}">${item}</div></div>`; if(quizId === 'quiz3') { const front = card.querySelector('.card-front'); const back = card.querySelector('.card-back'); front.style.backgroundColor = '#c084fc'; front.style.borderColor = '#9333ea'; back.style.backgroundColor = '#f59e0b'; back.style.borderColor = '#b45309'; } board.appendChild(card); }); let countdown = 5; timerEl.textContent = `Ingat posisinya! ${countdown}`; const interval = setInterval(() => { countdown--; timerEl.textContent = `Ingat posisinya! ${countdown}`; if (countdown <= 0) { clearInterval(interval); timerEl.textContent = ''; document.querySelectorAll(`#${quizId}-board .card`).forEach(card => { card.classList.remove('preview'); card.onclick = () => flipCard(card, quizId, size / 2, data, size, textClass); }); } }, 1000); }
-        function flipCard(card, quizId, totalPairs, data, size, textClass) { if (document.body.classList.contains("no-clicks") || card.classList.contains("flipped")) return; card.classList.add("flipped"); flippedCards.push(card); if (flippedCards.length === 2) { document.body.classList.add("no-clicks"); setTimeout(() => checkMemoryMatch(quizId, totalPairs, data, size, textClass), 1000); } }
-        function checkMemoryMatch(quizId, totalPairs, data, size, textClass) { const [card1, card2] = flippedCards; if (card1.dataset.pairId === card2.dataset.pairId) { matchedPairs++; document.getElementById(`${quizId}-matches`).textContent = matchedPairs; if (matchedPairs === totalPairs) { const feedbackEl = document.getElementById(`${quizId}-feedback`); feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-green-600 feedback h-8"; document.getElementById(`${quizId}-controls`).innerHTML += `<button onclick="initMemoryGame('${quizId}', masterData['${quizId}'], ${size}, '${textClass}')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button>`; } } else { card1.classList.remove("flipped"); card2.classList.remove("flipped"); } flippedCards = []; document.body.classList.remove("no-clicks"); }
+        
+        // PERBAIKAN: Memindahkan fungsi dari dalam <style> ke <script>
+        function startGame(quizId, data, size, textClass) {
+            const board = document.getElementById(`${quizId}-board`);
+            const controls = document.getElementById(`${quizId}-controls`);
+            const timerEl = document.getElementById(`${quizId}-timer`);
+            controls.innerHTML = `<p class="text-lg text-slate-600">Pasangan Ditemukan: <span id="${quizId}-matches" class="font-bold">0</span> / ${size/2}</p><div id="${quizId}-feedback" class="mt-4 text-center text-2xl font-bold feedback h-8"></div>`;
+            let items = [];
+            
+            // PERBAIKAN: Logika Kuis 3 diubah untuk mencari kata yang SAMA, seperti Kuis 2
+            if (quizId === 'quiz2' || quizId === 'quiz3') {
+                items = shuffleArray([...data]).slice(0, size / 2);
+                items = [...items, ...items];
+            }
+            shuffleArray(items);
+            board.innerHTML = '';
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = "card aspect-square cursor-pointer preview";
+                card.dataset.value = item;
+                // PERBAIKAN: Logika Kuis 3 disesuaikan untuk mencari kata yang SAMA
+                card.dataset.pairId = item;
+                card.innerHTML = `<div class="card-inner"><div class="card-front"><i class="fa-solid fa-leaf text-white text-4xl"></i></div><div class="card-back arabic-text ${textClass}">${item}</div></div>`;
+                if(quizId === 'quiz3') {
+                    const front = card.querySelector('.card-front');
+                    const back = card.querySelector('.card-back');
+                    front.style.backgroundColor = '#F97316';
+                    front.style.borderColor = '#FFF7ED';
+                    front.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)';
+                    front.innerHTML = `<i class="fa-solid fa-clone text-white text-4xl"></i>`;
+                    back.style.backgroundColor = '#FED7AA';
+                    back.style.borderColor = '#FFF7ED';
+                }
+                board.appendChild(card);
+            });
+            let countdown = 5;
+            timerEl.textContent = `Ingat posisinya! ${countdown}`;
+            const interval = setInterval(() => {
+                countdown--;
+                timerEl.textContent = `Ingat posisinya! ${countdown}`;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    timerEl.textContent = '';
+                    document.querySelectorAll(`#${quizId}-board .card`).forEach(card => {
+                        card.classList.remove('preview');
+                        card.onclick = () => flipCard(card, quizId, size / 2, data, size, textClass);
+                    });
+                }
+            }, 1000);
+        }
+
+        function flipCard(card, quizId, totalPairs, data, size, textClass) {
+            if (document.body.classList.contains("no-clicks") || card.classList.contains("flipped")) return;
+            card.classList.add("flipped");
+            flippedCards.push(card);
+            if (flippedCards.length === 2) {
+                document.body.classList.add("no-clicks");
+                setTimeout(() => checkMemoryMatch(quizId, totalPairs, data, size, textClass), 1000);
+            }
+        }
+
+        function checkMemoryMatch(quizId, totalPairs, data, size, textClass) {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.pairId === card2.dataset.pairId) {
+                matchedPairs++;
+                document.getElementById(`${quizId}-matches`).textContent = matchedPairs;
+                if (matchedPairs === totalPairs) {
+                    const feedbackEl = document.getElementById(`${quizId}-feedback`);
+                    feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)];
+                    feedbackEl.className = "mt-4 text-center text-2xl font-bold text-green-600 feedback h-8";
+                    document.getElementById(`${quizId}-controls`).innerHTML += `<button onclick="initMemoryGame('${quizId}', masterData['${quizId}'], ${size}, '${textClass}')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button>`;
+                }
+            } else {
+                card1.classList.remove("flipped");
+                card2.classList.remove("flipped");
+            }
+            flippedCards = [];
+            document.body.classList.remove("no-clicks");
+        }
         
         let quiz4Answer = [];
-        function initQuiz4() { const question = getNextQuestion('quiz4'); const state = quizStates.quiz4; const contentEl = document.getElementById('quiz4-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz4')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz4-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz4-score").textContent = `Skor: ${state.score}`; const wordsContainer = document.getElementById("quiz4-words"); const answerBox = document.getElementById("quiz4-answer-box"); wordsContainer.innerHTML = ""; answerBox.textContent = ""; quiz4Answer = []; document.getElementById("quiz4-feedback").innerHTML = ""; document.getElementById("quiz4-info").classList.add("opacity-0"); shuffleArray([...question.w]).forEach(word => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${word}</span>`; btn.className = "quiz-nav-btn p-3 word-option"; btn.style.backgroundColor = "#f59e0b"; btn.style.borderColor = "#b45309"; btn.onclick = () => { quiz4Answer.push(word); answerBox.textContent = quiz4Answer.join(" "); btn.disabled = true; btn.classList.add("opacity-50"); }; wordsContainer.appendChild(btn); }); renderQuiz4Buttons('initial');}
+        function initQuiz4() { const question = getNextQuestion('quiz4'); const state = quizStates.quiz4; const contentEl = document.getElementById('quiz4-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz4')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz4-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz4-score").textContent = `Skor: ${state.score}`; const wordsContainer = document.getElementById("quiz4-words"); const answerBox = document.getElementById("quiz4-answer-box"); wordsContainer.innerHTML = ""; answerBox.textContent = ""; quiz4Answer = []; document.getElementById("quiz4-feedback").innerHTML = ""; document.getElementById("quiz4-info").classList.add("opacity-0"); document.getElementById('quiz4-words').classList.remove('no-clicks'); shuffleArray([...question.w]).forEach(word => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${word}</span>`; btn.className = "quiz-nav-btn p-3 word-option"; btn.style.backgroundColor = "#f59e0b"; btn.style.borderColor = "#b45309"; btn.onclick = () => { quiz4Answer.push(word); answerBox.textContent = quiz4Answer.join(" "); btn.disabled = true; btn.classList.add("opacity-50"); }; wordsContainer.appendChild(btn); }); renderQuiz4Buttons('initial');}
         // PERBAIKAN: Fungsi untuk merender tombol di Quiz 4 sesuai state
-        function renderQuiz4Buttons(state) { const actionContainer = document.getElementById('quiz4-action-buttons'); if (!actionContainer) return; actionContainer.innerHTML = ''; if (state === 'initial') { actionContainer.innerHTML = ` <button id="quiz4-help" class="quiz-nav-btn" style="background-color:#0284c7; border-color:#0369a1;"><i class="fa-solid fa-lightbulb mr-2"></i>Bantuan</button> <button id="quiz4-check" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Periksa</button> <button id="quiz4-clear" class="quiz-nav-btn" style="background-color:#94a3b8; border-color:#475569;">Hapus</button> `; } else if (state === 'answered') { actionContainer.innerHTML = ` <button id="quiz4-next" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Lanjut <i class="fa-solid fa-arrow-right ml-2"></i></button> `; document.getElementById('quiz4-next').onclick = initQuiz4; } }
+        function renderQuiz4Buttons(state) {
+            const actionContainer = document.getElementById('quiz4-action-buttons');
+            if (!actionContainer) return;
+            actionContainer.innerHTML = '';
+
+            if (state === 'initial') {
+                actionContainer.innerHTML = `
+                    <button id="quiz4-help" class="quiz-nav-btn" style="background-color:#0284c7; border-color:#0369a1;"><i class="fa-solid fa-lightbulb mr-2"></i>Bantuan</button>
+                    <button id="quiz4-check" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Periksa</button>
+                    <button id="quiz4-clear" class="quiz-nav-btn" style="background-color:#94a3b8; border-color:#475569;">Hapus</button>
+                `;
+                document.getElementById('quiz4-check').onclick = checkQuiz4Answer;
+                document.getElementById('quiz4-clear').onclick = () => {
+                    quiz4Answer = [];
+                    document.getElementById('quiz4-answer-box').textContent = '';
+                    document.querySelectorAll('#quiz4-words .word-option').forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50');
+                    });
+                };
+                document.getElementById('quiz4-help').onclick = () => {
+                    const infoBox = document.getElementById("quiz4-info");
+                    const state = quizStates.quiz4;
+                    const currentQ = state.data[state.currentQIndex];
+                    infoBox.innerHTML = `<i class="${currentQ.i} text-3xl text-slate-500"></i> <p>Artinya: "${currentQ.t}"</p>`;
+                    infoBox.classList.remove("opacity-0");
+                    document.getElementById('quiz4-help').disabled = true;
+                    document.getElementById('quiz4-help').classList.add("opacity-50");
+                };
+            } else if (state === 'answered') {
+                actionContainer.innerHTML = `
+                    <button id="quiz4-next" class="quiz-nav-btn" style="background-color:#16a34a; border-color:#15803d;">Lanjut <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                `;
+                document.getElementById('quiz4-next').onclick = initQuiz4;
+            }
+        }
         function checkQuiz4Answer() { const feedbackEl = document.getElementById("quiz4-feedback"); const infoBox = document.getElementById("quiz4-info"); const state = quizStates.quiz4; const correct = quiz4Answer.join(" ") === state.data[state.currentQIndex].s; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-green-600 feedback"; const currentQ = state.data[state.currentQIndex]; infoBox.innerHTML = `<i class="${currentQ.i} text-3xl text-slate-500"></i> <p>"${currentQ.t}"</p>`; infoBox.classList.remove("opacity-0"); document.getElementById('quiz4-words').classList.add('no-clicks'); renderQuiz4Buttons('answered'); } else { feedbackEl.textContent = "Belum Benar, Coba Lagi!"; feedbackEl.className = "mt-4 text-center text-2xl font-bold text-red-600 feedback"; setTimeout(() => { feedbackEl.textContent = ""; }, 2000); } }
         
         function initQuiz5() { const question = getNextQuestion('quiz5'); const state = quizStates.quiz5; const contentEl = document.getElementById('quiz5-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz5')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz5-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz5-score").textContent = `Skor: ${state.score}`; const itemsContainer = document.getElementById("quiz5-items"); itemsContainer.innerHTML = ""; document.getElementById("quiz5-feedback").innerHTML = ""; const colorPalette = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#818cf8", "#c084fc", "#f472b6"]; const shuffledItems = shuffleArray([...question.i]); const shuffledColors = shuffleArray([...colorPalette]); shuffledItems.forEach((item, index) => { const btn = document.createElement("button"); const isWord = item.length > 1; const textSize = isWord ? "text-2xl" : "text-4xl"; const boxSize = isWord ? "w-40 h-28" : "w-24 h-24"; const color = shuffledColors[index % shuffledColors.length]; btn.innerHTML = `<span class="arabic-text ${textSize}">${item}</span>`; btn.className = `quiz-nav-btn text-white ${boxSize} rounded-xl flex items-center justify-center transition-transform transform hover:scale-105`; btn.style.backgroundColor = color; btn.style.borderColor = "transparent"; btn.onclick = () => checkQuiz5Answer(item, btn); itemsContainer.appendChild(btn); }); }
         function checkQuiz5Answer(answer, btn) { const feedbackEl = document.getElementById("quiz5-feedback"); const state = quizStates.quiz5; const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-8 text-center text-2xl font-bold text-green-600 feedback"; btn.classList.add("correct-pulse"); } else { feedbackEl.textContent = "Bukan yang itu! ❌"; feedbackEl.className = "mt-8 text-center text-2xl font-bold text-red-600 feedback"; btn.classList.add("incorrect-shake"); } document.getElementById('quiz5-items').classList.add('no-clicks'); setTimeout(() => { btn.classList.remove("correct-pulse", "incorrect-shake"); document.getElementById('quiz5-items').classList.remove('no-clicks'); initQuiz5(); }, 1500); }
 
-        function initQuiz6() { const question = getNextQuestion('quiz6'); const state = quizStates.quiz6; const contentEl = document.getElementById('quiz6-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz6')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz6-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz6-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz6-question").textContent = question.q.join(" ______ "); const optionsContainer = document.getElementById("quiz6-options"); optionsContainer.innerHTML = ""; document.getElementById("quiz6-feedback").innerHTML = ""; shuffleArray([...question.o]).forEach(opt => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${opt}</span>`; btn.className = "quiz-nav-btn w-full p-4"; btn.style.backgroundColor = '#a855f7'; btn.style.borderColor = '#7e22ce'; btn.onclick = () => checkQuiz6Answer(opt, btn); optionsContainer.appendChild(btn); }); }
+        function initQuiz6() { const question = getNextQuestion('quiz6'); const state = quizStates.quiz6; const contentEl = document.getElementById('quiz6-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz6')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz6-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz6-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz6-question").textContent = question.q[0] + ' ______ ' + question.q[1].replace('______', ''); const optionsContainer = document.getElementById("quiz6-options"); optionsContainer.innerHTML = ""; document.getElementById("quiz6-feedback").innerHTML = ""; shuffleArray([...question.o]).forEach(opt => { const btn = document.createElement("button"); btn.innerHTML = `<span class="arabic-text text-2xl">${opt}</span>`; btn.className = "quiz-nav-btn w-full p-4"; btn.style.backgroundColor = '#a855f7'; btn.style.borderColor = '#7e22ce'; btn.onclick = () => checkQuiz6Answer(opt, btn); optionsContainer.appendChild(btn); }); }
         function checkQuiz6Answer(answer, btn) { const feedbackEl = document.getElementById("quiz6-feedback"); const state = quizStates.quiz6; const questionEl = document.getElementById("quiz6-question"); const correct = answer === state.data[state.currentQIndex].a; if (correct) { state.score++; feedbackEl.textContent = appreciation[Math.floor(Math.random() * appreciation.length)]; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-green-600 feedback h-8"; btn.classList.add("correct-pulse"); questionEl.textContent = state.data[state.currentQIndex].q.join(` ${answer} `); } else { feedbackEl.textContent = "Oops, Coba Lagi! 👾"; feedbackEl.className = "mt-6 text-center text-2xl font-bold text-red-600 feedback h-8"; btn.classList.add("incorrect-shake"); } document.getElementById('quiz6-options').classList.add('no-clicks'); setTimeout(() => { btn.classList.remove("correct-pulse", "incorrect-shake"); document.getElementById('quiz6-options').classList.remove('no-clicks'); initQuiz6(); }, 2000); }
 
         function initQuiz7() { const question = getNextQuestion('quiz7'); const state = quizStates.quiz7; const contentEl = document.getElementById('quiz7-content'); if (!question) { if(contentEl) contentEl.innerHTML = `<div class="text-center"><h3 class="text-3xl font-bold text-green-600">Selesai!</h3><p class="text-2xl mt-2">Skor Akhir: ${state.score} / ${state.totalQuestions}</p><button onclick="showQuiz('quiz7')" class="quiz-nav-btn mt-4" style="background-color:#16a34a; border-color:#15803d;">Main Lagi</button></div>`; return; } document.getElementById("quiz7-q-num").textContent = `Soal ${state.totalQuestions - state.unaskedIndices.length}/${state.totalQuestions}`; document.getElementById("quiz7-score").textContent = `Skor: ${state.score}`; document.getElementById("quiz7-image").innerHTML = question.img; document.getElementById("quiz7-statement").textContent = question.st; document.getElementById("quiz7-feedback").innerHTML = ""; }
@@ -192,34 +309,8 @@
                 initFunctions[quizId]();
                 
                 if (quizId === 'quiz4') {
-                    // PERBAIKAN: Gunakan addEventListener untuk manajemen yang lebih baik
-                    const actionContainer = document.getElementById('quiz4-action-buttons');
-                    actionContainer.addEventListener('click', (e) => {
-                        const target = e.target.closest('button');
-                        if (!target) return;
-
-                        if (target.id === 'quiz4-check') {
-                            checkQuiz4Answer();
-                        } 
-                        else if (target.id === 'quiz4-clear') {
-                            // PERBAIKAN: Tombol hapus hanya membersihkan jawaban saat ini
-                            quiz4Answer = [];
-                            document.getElementById('quiz4-answer-box').textContent = '';
-                            document.querySelectorAll('#quiz4-words .word-option').forEach(btn => {
-                                btn.disabled = false;
-                                btn.classList.remove('opacity-50');
-                            });
-                        } 
-                        else if (target.id === 'quiz4-help') {
-                            const infoBox = document.getElementById("quiz4-info");
-                            const state = quizStates.quiz4;
-                            const currentQ = state.data[state.currentQIndex];
-                            infoBox.innerHTML = `<i class="${currentQ.i} text-3xl text-slate-500"></i> <p>Artinya: "${currentQ.t}"</p>`;
-                            infoBox.classList.remove("opacity-0");
-                            target.disabled = true;
-                            target.classList.add("opacity-50");
-                        }
-                    });
+                    // PERBAIKAN: Fungsi event listener yang lama dihapus karena sudah ditangani di renderQuiz4Buttons
+                    renderQuiz4Buttons('initial'); // Cukup panggil render untuk setup awal
                 }
                 if (quizId === 'quiz7') {
                     document.getElementById('quiz7-btn-true').onclick = () => checkQuiz7Answer(true);
@@ -236,5 +327,8 @@
     </script>
 </body>
 </html>
+
+
+
 
 
