@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permainan Bahasa Arab Interaktif</title>
+    <title>Permainan Bahasa Arab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,7 +80,7 @@
         <!-- Header -->
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-blue-800">Permainan Bahasa Arab</h1>
-            <p class="text-gray-600 mt-2">(Berdasarkan Buku Hal. 11-30)</p>
+            <p class="text-gray-600 mt-2">(Berdasarkan Buku Al-Arobiyyah Baina Yadai Aulaadina Hal. 11-30)</p>
         </header>
 
         <main>
@@ -532,14 +532,14 @@
         function setupMemoryGame(container) { // REVISED
             container.innerHTML = `
                 <h3 class="text-2xl font-bold text-center text-indigo-800 mb-2">Memori Huruf</h3>
-                <p id="instruction" class="text-center text-lg mb-4">Hafalkan posisi huruf selama 5 detik!</p>
+                <p id="instruction" class="text-center text-lg mb-4">Hafalkan posisi huruf selama 7 detik!</p>
                 <div id="memory-board" class="grid grid-cols-4 gap-4 max-w-md mx-auto"></div>
                 <p id="feedback" class="feedback text-center font-semibold h-6 mt-4"></p>`;
 
             const board = container.querySelector('#memory-board');
             const feedbackEl = container.querySelector('#feedback');
             const instructionEl = container.querySelector('#instruction');
-            const cardsData = [...memoryGameLetters, ...memoryGameLetters].sort(() => 0.5 - Math.random());
+            const cardsData = [...memoryGameLetters, ...memoryGameLetters].sort(() => 0.7 - Math.random());
             let flippedCards = [];
             let matchedPairs = 0;
             let canClick = false;
@@ -602,7 +602,7 @@
         function setupMemoryWordGame(container) { // REVISED & EXPANDED
             container.innerHTML = `
                 <h3 class="text-2xl font-bold text-center text-pink-800 mb-2">Memori Kata</h3>
-                <p id="instruction" class="text-center text-lg mb-4">Hafalkan pasangan kata selama 5 detik!</p>
+                <p id="instruction" class="text-center text-lg mb-4">Hafalkan pasangan kata selama 7 detik!</p>
                 <div id="memory-board" class="grid grid-cols-4 gap-4 max-w-2xl mx-auto"></div>
                 <p id="feedback" class="feedback text-center font-semibold h-6 mt-4"></p>`;
             
@@ -619,7 +619,7 @@
               cardsContent.push({ content: p.arabic, pairId: index, type: 'arabic' });
               cardsContent.push({ content: p.indo, pairId: index, type: 'indo' });
             });
-            cardsContent.sort(() => 0.5 - Math.random());
+            cardsContent.sort(() => 0.7 - Math.random());
 
             cardsContent.forEach(item => {
                 const card = document.createElement('div');
