@@ -72,6 +72,15 @@
             background-color: #f0f9ff; /* blue-50 */
             transform: rotateY(180deg);
         }
+        
+        /* (BARU) Style untuk Tic Tac Toe */
+        .ttt-cell.filled { 
+            cursor: not-allowed; 
+        }
+        .ttt-rtl { 
+            direction: rtl; 
+            font-family: 'Noto Naskh Arabic', serif;
+        }
     </style>
 </head>
 <body class="bg-blue-50 text-gray-800">
@@ -125,6 +134,11 @@
                     <h3 class="text-xl font-bold text-pink-800">9. Memori Kata</h3>
                     <p class="mt-2 text-gray-600">Cocokkan kata dan artinya setelah menghafal.</p>
                 </div>
+                <!-- (BARU) Row 4 -->
+                 <div onclick="startGame('tic-tac-toe-game')" class="game-card bg-white p-6 rounded-xl shadow-md cursor-pointer border-l-8 border-teal-500">
+                    <h3 class="text-xl font-bold text-teal-800">10. Tic Tac Toe Kosa Kata</h3>
+                    <p class="mt-2 text-gray-600">Jawab soal kosa kata untuk menempatkan tandamu.</p>
+                </div>
             </section>
             
             <!-- Container untuk Game yang aktif -->
@@ -132,23 +146,43 @@
         </main>
     </div>
 
+    <!-- (BARU) Modal untuk Tic Tac Toe (di luar container utama) -->
+    <div id="ttt-question-modal" class="fixed inset-0 bg-black bg-opacity-60 items-center justify-center p-4 backdrop-blur-sm z-50" style="display: none;">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full" id="ttt-question-box">
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-2">Apa arti dari kata ini?</h2>
+            <h3 id="ttt-vocab-word" class="text-5xl font-bold text-center text-gray-900 my-6 ttt-rtl">
+                <!-- Kata TTT diisi JS -->
+            </h3>
+            <div id="ttt-options-container" class="flex flex-col space-y-3">
+                <!-- Pilihan TTT diisi JS -->
+            </div>
+            <div id="ttt-timer-display" class="text-2xl font-bold text-center text-red-500 my-4 h-8">
+                <!-- Timer TTT diisi JS -->
+            </div>
+            <p id="ttt-result-message" class="text-center font-semibold mt-4 h-6">
+                <!-- Pesan TTT diisi JS -->
+            </p>
+        </div>
+    </div>
+
+
     <script>
         // --- DATA UNTUK GAMES ---
-        const matchData = { "Nama saya": "اسْمِي", "Nama kamu (pr)": "اسْمُكِ", "Saya": "أَنَا", "Kamu (lk)": "أَنْتَ", "Selamat tinggal": "مَعَ السَّلَامَةِ", "Apa kabarmu? (lk)": "كَيْفَ حَالُكَ؟" };
+        const matchData = { "Nama saya": "اسْمِي", "Nama kamu (pr)": "اسْمُكِ", "Saya": "أَنَا", "Kamu (lk)": "أَنْتَ", "Selamat tinggal": "مَعَ السَّلَامَةِ", "Apa kabarmu? (lk)": "كَيْفَ حَالُكَ؟" };
         const findLetterPool = ['ت', 'ط', 'خ', 'ك', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'أ', 'ب', 'ث'];
         const arrangeWordData = [
             { word: "خَدِيجَةُ", components: ["خَ", "دِي", "جَ", "ةُ"] },
-            { word: "السَّلَامُ", components: ["ال", "سَّ", "لَا", "مُ"] },
+            { word: "السَّلَامُ", components: ["ال", "سَّ", "لَا", "مُ"] },
             { word: "عَلَيْكُمْ", components: ["عَ", "لَيْ", "كُمْ"] }
         ];
         const trueFalseData = [
             { word: "مَا اسْمُكِ؟", meaning: "Siapa namamu (lk)?", correct: false },
             { word: "أَنَا بِخَيْرٍ", meaning: "Saya baik-baik saja", correct: true },
             { word: "أَنْتِ", meaning: "Kamu (pr)", correct: true },
-            { word: "السَّلَامُ", meaning: "Sampai Jumpa", correct: false }
+            { word: "السَّلَامُ", meaning: "Sampai Jumpa", correct: false }
         ];
         const guessWordData = [
-            { sentence: ["السَّلَامُ", "______"], options: ["عَلَيْكُمْ", "بِخَيْرٍ", "اسْمُكِ"], answer: "عَلَيْكُمْ" },
+            { sentence: ["السَّلَامُ", "______"], options: ["عَلَيْكُمْ", "بِخَيْرٍ", "اسْمُكِ"], answer: "عَلَيْكُمْ" },
             { sentence: ["مَا", "______؟"], options: ["أَنَا", "اسْمُكَ", "خَوْلَةُ"], answer: "اسْمُكَ" },
             { sentence: ["أَنَا", "______"], options: ["حَالُكَ", "بِخَيْرٍ", "مَعَ"], answer: "بِخَيْرٍ" }
         ];
@@ -160,14 +194,38 @@
             { arabic: 'بِخَيْرٍ', indo: 'Baik-baik' },
             { arabic: 'اسْمُكِ', indo: 'Namamu (pr)' },
             { arabic: 'أَنْتِ', indo: 'Kamu (pr)' },
-            { arabic: 'السَّلَامُ', indo: 'Keselamatan' },
+            { arabic: 'السَّلَامُ', indo: 'Keselamatan' },
             { arabic: 'عَلَيْكُمْ', indo: 'Atas kalian' }
         ];
         const greetingGameData = [
-            { situation: "Saat dua orang bertemu untuk pertama kali:", options: ["السَّلَامُ عَلَيْكُمْ", "مَعَ السَّلَامَةِ", "أَنَا بِخَيْرٍ"], answer: "السَّلَامُ عَلَيْكُمْ" },
-            { situation: "Saat seseorang menjawab sapaan salam:", options: ["كَيْفَ حَالُكَ؟", "وَعَلَيْكُمُ السَّلَامُ", "اسْمِي"], answer: "وَعَلَيْكُمُ السَّلَامُ" },
+            { situation: "Saat dua orang bertemu untuk pertama kali:", options: ["السَّلَامُ عَلَيْكُمْ", "مَعَ السَّلَامَةِ", "أَنَا بِخَيْرٍ"], answer: "السَّلَامُ عَلَيْكُمْ" },
+            { situation: "Saat seseorang menjawab sapaan salam:", options: ["كَيْفَ حَالُكَ؟", "وَعَلَيْكُمُ السَّلَامُ", "اسْمِي"], answer: "وَعَلَيْكُمُ السَّلَامُ" },
         ];
-        const logicalPairsData = { "السَّلَامُ عَلَيْكُمْ": "وَعَلَيْكُمُ السَّلَامُ", "مَا اسْمُكِ؟": "اسْمِي خَدِيجَةُ", "كَيْفَ حَالُكَ؟": "أَنَا بِخَيْرٍ" };
+        const logicalPairsData = { "السَّلَامُ عَلَيْكُمْ": "وَعَلَيْكُمُ السَّلَامُ", "مَا اسْمُكِ؟": "اسْمِي خَدِيجَةُ", "كَيْفَ حَالُكَ؟": "أَنَا بِخَيْرٍ" };
+
+        // (BARU) Data untuk Tic Tac Toe
+        const ticTacToeData = [
+            { word: "أَنَا", options: ["Saya", "Kamu (lk)", "Dia (pr)"], correct: 0 },
+            { word: "قَلَمُ", options: ["Mobil", "Pena", "Tas"], correct: 1 },
+            { word: "اسْمِي", options: ["Namamu (pr)", "Nama saya", "Namamu (lk)"], correct: 1 },
+            { word: "نَعَمْ", options: ["Ya", "Tidak", "Di mana"], correct: 0 },
+            { word: "لَا", options: ["Berapa", "Ya", "Tidak"], correct: 2 },
+            { word: "أَيْنَ", options: ["Di sini", "Di mana", "Banyak"], correct: 1 },
+            { word: "هُنَا", options: ["Di sini", "Di sana", "Pena"], correct: 0 },
+            { word: "وَاحِدٌ", options: ["Tiga", "Satu", "Dua"], correct: 1 },
+            { word: "اثْنَانِ", options: ["Dua", "Empat", "Satu"], correct: 0 },
+            { word: "ثَلَاثَةٌ", options: ["Lima", "Tiga", "Empat"], correct: 1 },
+            { word: "حَقِيبَةٌ", options: ["Kertas", "Mobil", "Tas"], correct: 2 },
+            { word: "سَيَّارَةٌ", options: ["Mobil", "Tas", "Sedikit"], correct: 0 },
+            { word: "كَثِيرٌ", options: ["Sedikit", "Berapa", "Banyak"], correct: 2 },
+            { word: "قَلِيلٌ", options: ["Sedikit", "Banyak", "Mobil"], correct: 0 },
+            { word: "كَمْ", options: ["Di mana", "Berapa", "Tidak"], correct: 1 },
+            { word: "وَرَقَةٌ", options: ["Kertas", "Pena", "Satu"], correct: 0 },
+            { word: "أَنْتَ", options: ["Saya", "Kamu (lk)", "Kamu (pr)"], correct: 1 },
+            { word: "أَنْتِ", options: ["Kamu (pr)", "Dia (lk)", "Saya"], correct: 0 },
+            { word: "اسْمُكَ", options: ["Namamu (lk)", "Nama saya", "Namamu (pr)"], correct: 0 },
+            { word: "اسْمُكِ", options: ["Nama saya", "Namamu (lk)", "Namamu (pr)"], correct: 2 }
+        ];
 
         // --- FUNGSI UTAMA ---
         function startGame(gameId) {
@@ -191,16 +249,37 @@
                 'memory-game': setupMemoryGame,
                 'greeting-game': setupGreetingGame,
                 'logical-pairs-game': setupLogicalPairsGame,
-                'memory-word-game': setupMemoryWordGame
+                'memory-word-game': setupMemoryWordGame,
+                'tic-tac-toe-game': setupTicTacToeGame // (BARU)
             };
             if (gameFunctions[gameId]) {
                 gameFunctions[gameId](gameContent);
             }
         }
 
+        // (BARU) Objek untuk menampung logika & status Tic Tac Toe
+        // Kita letakkan di luar agar bisa diakses oleh showMenu() untuk clear timer
+        let tttGameLogic = {
+            player: 'X',
+            board: Array(9).fill(''),
+            active: true,
+            targetIndex: null,
+            questions: [],
+            timer: null,
+            // Variabel DOM (akan di-cache saat init)
+            dom: {}
+        };
+
         function showMenu() {
             document.getElementById('game-container').classList.add('hidden');
             document.getElementById('game-menu').classList.remove('hidden');
+
+            // (BARU) Cleanup untuk Tic Tac Toe
+            const tttModal = document.getElementById('ttt-question-modal');
+            if (tttModal) tttModal.style.display = 'none';
+            if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
+            // Reset TTT logic state
+            tttGameLogic = { ...tttGameLogic, active: false, timer: null, dom: {} };
         }
         
         // --- GAME 1, 2, 4, 5 (Tidak Berubah) ---
@@ -564,7 +643,7 @@
                 allCards.forEach(c => c.classList.remove('preview'));
                 canClick = true;
                 instructionEl.textContent = "Cari pasangan huruf yang sama!";
-            }, 5000);
+            }, 5000); // 5 detik
 
             function handleCardClick(card) {
                 if (!canClick || flippedCards.length >= 2 || card.classList.contains('flipped')) {
@@ -644,7 +723,7 @@
                 allCards.forEach(c => c.classList.remove('preview'));
                 canClick = true;
                 instructionEl.textContent = "Cocokkan kata dengan artinya!";
-            }, 5000);
+            }, 5000); // 5 detik
 
             function handleCardClick(card) {
                 if (!canClick || flippedCards.length >= 2 || card.classList.contains('flipped')) return;
@@ -675,7 +754,228 @@
                 }
             }
         }
+
+        // --- (BARU) GAME 10: TIC TAC TOE LOGIC ---
+
+        function setupTicTacToeGame(container) {
+            // 1. Inject HTML untuk papan TTT
+            container.innerHTML = `
+                <h3 class="text-2xl font-bold text-center text-teal-800 mb-4">Tic Tac Toe Kosa Kata</h3>
+                <div class="max-w-xs mx-auto bg-white p-4 rounded-lg shadow-inner">
+                    <div id="ttt-status-message" class="text-xl font-semibold text-center text-blue-600 mb-4">
+                        Giliran Pemain X
+                    </div>
+                    <div id="ttt-board" class="grid grid-cols-3 gap-3 bg-gray-200 p-3 rounded-lg shadow-inner">
+                        <!-- Sel-sel TTT akan dibuat oleh JS -->
+                    </div>
+                    <button id="ttt-reset-button" class="w-full mt-6 bg-red-500 text-white py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:bg-red-600 transition">
+                        Ulangi Permainan
+                    </button>
+                </div>
+            `;
+            
+            // 2. Panggil fungsi inisialisasi TTT
+            initTicTacToeGame();
+        }
+
+        // (BARU) Fungsi inisialisasi utama untuk Tic Tac Toe
+        function initTicTacToeGame() {
+            // Cache DOM elements
+            tttGameLogic.dom.boardElement = document.getElementById('ttt-board');
+            tttGameLogic.dom.statusMessage = document.getElementById('ttt-status-message');
+            tttGameLogic.dom.resetButton = document.getElementById('ttt-reset-button');
+            
+            // Modal elements (sudah ada di HTML utama)
+            tttGameLogic.dom.questionModal = document.getElementById('ttt-question-modal');
+            tttGameLogic.dom.questionBox = document.getElementById('ttt-question-box');
+            tttGameLogic.dom.vocabWordElement = document.getElementById('ttt-vocab-word');
+            tttGameLogic.dom.optionsContainer = document.getElementById('ttt-options-container');
+            tttGameLogic.dom.resultMessage = document.getElementById('ttt-result-message');
+            tttGameLogic.dom.timerDisplay = document.getElementById('ttt-timer-display');
+
+            // Reset state
+            tttGameLogic.player = 'X';
+            tttGameLogic.board = Array(9).fill('');
+            tttGameLogic.active = true;
+            tttGameLogic.targetIndex = null;
+            if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
+            
+            // Setup UI
+            tttGameLogic.dom.statusMessage.textContent = `Giliran Pemain ${tttGameLogic.player}`;
+            tttGameLogic.dom.resultMessage.textContent = '';
+            tttGameLogic.dom.timerDisplay.textContent = '';
+            tttGameLogic.dom.boardElement.innerHTML = '';
+
+            if (tttGameLogic.questions.length === 0) {
+                tttGameLogic.questions = [...ticTacToeData].sort(() => 0.5 - Math.random());
+            }
+
+            // Buat sel papan
+            tttGameLogic.board.forEach((_, index) => {
+                const cell = document.createElement('div');
+                // Gunakan class .ttt-cell
+                cell.className = 'ttt-cell w-full h-20 md:h-24 bg-white rounded-lg flex items-center justify-center text-5xl md:text-6xl font-bold cursor-pointer transition duration-300 hover:bg-gray-50';
+                cell.dataset.index = index;
+                cell.addEventListener('click', handleTicTacToeCellClick);
+                tttGameLogic.dom.boardElement.appendChild(cell);
+            });
+
+            // Add reset listener
+            // (Clone untuk hapus listener lama jika ada)
+            const oldResetButton = tttGameLogic.dom.resetButton;
+            const newResetButton = oldResetButton.cloneNode(true);
+            oldResetButton.parentNode.replaceChild(newResetButton, oldResetButton);
+            newResetButton.addEventListener('click', initTicTacToeGame);
+            tttGameLogic.dom.resetButton = newResetButton; // Update cache
+            
+            // Pastikan modal tersembunyi
+            hideTicTacToeQuestionModal();
+        }
+
+        const tttWinPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        function handleTicTacToeCellClick(event) {
+            const clickedCellIndex = parseInt(event.target.dataset.index);
+            if (tttGameLogic.board[clickedCellIndex] !== '' || !tttGameLogic.active) {
+                return;
+            }
+            tttGameLogic.targetIndex = clickedCellIndex;
+            showTicTacToeQuestion();
+        }
+
+        function showTicTacToeQuestion() {
+            if (tttGameLogic.questions.length === 0) {
+                tttGameLogic.questions = [...ticTacToeData].sort(() => 0.5 - Math.random());
+            }
+            const currentQuestion = tttGameLogic.questions.pop();
+            
+            const dom = tttGameLogic.dom;
+            dom.questionModal.dataset.correctIndex = currentQuestion.correct;
+            dom.vocabWordElement.textContent = currentQuestion.word;
+            dom.optionsContainer.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'game-button w-full p-3 rounded-lg text-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition duration-200';
+                optionButton.textContent = option;
+                optionButton.dataset.index = index;
+                optionButton.addEventListener('click', handleTicTacToeOptionClick);
+                dom.optionsContainer.appendChild(optionButton);
+            });
+
+            if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
+            let timeLeft = 8;
+            dom.timerDisplay.textContent = timeLeft;
+            dom.timerDisplay.classList.remove('text-gray-500');
+            dom.timerDisplay.classList.add('text-red-500');
+
+            tttGameLogic.timer = setInterval(() => {
+                timeLeft--;
+                dom.timerDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(tttGameLogic.timer);
+                    handleTicTacToeTimeout();
+                }
+            }, 1000);
+
+            dom.questionModal.style.display = 'flex';
+        }
+
+        function hideTicTacToeQuestionModal() {
+            if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
+            const dom = tttGameLogic.dom;
+            // Cek jika dom.timerDisplay ada sebelum mengubah
+            if(dom.timerDisplay) dom.timerDisplay.textContent = '';
+            if(dom.questionModal) dom.questionModal.style.display = 'none';
+            if(dom.resultMessage) dom.resultMessage.textContent = '';
+        }
+
+        function handleTicTacToeOptionClick(event) {
+            clearInterval(tttGameLogic.timer);
+            const dom = tttGameLogic.dom;
+            dom.timerDisplay.classList.add('text-gray-500');
+            
+            const selectedIndex = parseInt(event.target.dataset.index);
+            const correctIndex = parseInt(dom.questionModal.dataset.correctIndex);
+
+            if (selectedIndex === correctIndex) {
+                dom.resultMessage.textContent = 'Benar! (Correct!)';
+                dom.resultMessage.style.color = '#16A34A';
+                setTimeout(() => {
+                    placeTicTacToeMark(tttGameLogic.targetIndex);
+                    hideTicTacToeQuestionModal();
+                }, 800);
+            } else {
+                dom.resultMessage.textContent = 'Salah! (Incorrect!) Giliran lawan.';
+                dom.resultMessage.style.color = '#DC2626';
+                setTimeout(() => {
+                    changeTicTacToePlayer();
+                    hideTicTacToeQuestionModal();
+                }, 1200);
+            }
+        }
+
+        function handleTicTacToeTimeout() {
+            const dom = tttGameLogic.dom;
+            dom.resultMessage.textContent = 'Waktu Habis! Giliran lawan.';
+            dom.resultMessage.style.color = '#DC2626';
+            setTimeout(() => {
+                changeTicTacToePlayer();
+                hideTicTacToeQuestionModal();
+            }, 1200);
+        }
+
+        function placeTicTacToeMark(cellIndex) {
+            if (!tttGameLogic.active || tttGameLogic.board[cellIndex] !== '') return;
+
+            const dom = tttGameLogic.dom;
+            tttGameLogic.board[cellIndex] = tttGameLogic.player;
+            const cellElement = dom.boardElement.children[cellIndex];
+            cellElement.textContent = tttGameLogic.player;
+            cellElement.classList.add('filled');
+            cellElement.classList.add(tttGameLogic.player === 'X' ? 'text-blue-600' : 'text-pink-500');
+
+            if (checkTicTacToeWin()) {
+                endTicTacToeGame(false);
+            } else if (checkTicTacToeDraw()) {
+                endTicTacToeGame(true);
+            } else {
+                changeTicTacToePlayer();
+            }
+        }
+
+        function changeTicTacToePlayer() {
+            tttGameLogic.player = tttGameLogic.player === 'X' ? 'O' : 'X';
+            tttGameLogic.dom.statusMessage.textContent = `Giliran Pemain ${tttGameLogic.player}`;
+        }
+
+        function checkTicTacToeWin() {
+            return tttWinPatterns.some(pattern => {
+                return pattern.every(index => tttGameLogic.board[index] === tttGameLogic.player);
+            });
+        }
+
+        function checkTicTacToeDraw() {
+            return tttGameLogic.board.every(cell => cell !== '');
+        }
+
+        function endTicTacToeGame(isDraw) {
+            tttGameLogic.active = false;
+            const dom = tttGameLogic.dom;
+            if (isDraw) {
+                dom.statusMessage.textContent = 'Permainan Seri!';
+                dom.statusMessage.classList.add('text-gray-700');
+            } else {
+                dom.statusMessage.textContent = `Pemain ${tttGameLogic.player} Menang!`;
+                dom.statusMessage.classList.add('text-green-600');
+            }
+        }
+        // --- AKHIR GAME 10 ---
+
     </script>
 </body>
 </html>
-
