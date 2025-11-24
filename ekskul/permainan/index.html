@@ -73,13 +73,49 @@
             transform: rotateY(180deg);
         }
         
-        /* (BARU) Style untuk Tic Tac Toe */
+        /* Style untuk Tic Tac Toe */
         .ttt-cell.filled { 
             cursor: not-allowed; 
         }
         .ttt-rtl { 
             direction: rtl; 
             font-family: 'Noto Naskh Arabic', serif;
+        }
+
+        /* Style untuk Game 12: Whack-a-Mole */
+        .mole-hole {
+            position: relative;
+            overflow: hidden;
+            background-color: #e5e7eb; /* gray-200 */
+            border-radius: 1rem;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .mole {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-radius: 0.75rem;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            user-select: none;
+        }
+        .mole.up {
+            transform: translateY(0);
+        }
+        .mole.hit {
+            background-color: #22c55e; /* green-500 */
+            transform: scale(0.95);
+        }
+        .mole.wrong {
+            background-color: #ef4444; /* red-500 */
         }
     </style>
 </head>
@@ -89,7 +125,7 @@
         <!-- Header -->
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-blue-800">Permainan Bahasa Arab</h1>
-            <p class="text-gray-600 mt-2">(Berdasarkan Buku Al-Arobiyyah Baina Yadai Aulaadina Hal. 11-30)</p>
+            <p class="text-gray-600 mt-2">(Berdasarkan Kitab Al-Arobiyyah Baina Yadai Aulaadina)</p>
         </header>
 
         <main>
@@ -134,10 +170,19 @@
                     <h3 class="text-xl font-bold text-pink-800">9. Memori Kata</h3>
                     <p class="mt-2 text-gray-600">Cocokkan kata dan artinya setelah menghafal.</p>
                 </div>
-                <!-- (BARU) Row 4 -->
+                <!-- Row 4 -->
                  <div onclick="startGame('tic-tac-toe-game')" class="game-card bg-white p-6 rounded-xl shadow-md cursor-pointer border-l-8 border-teal-500">
                     <h3 class="text-xl font-bold text-teal-800">10. Tic Tac Toe Kosa Kata</h3>
                     <p class="mt-2 text-gray-600">Jawab soal kosa kata untuk menempatkan tandamu.</p>
+                </div>
+                <div onclick="startGame('group-guess-game')" class="game-card bg-white p-6 rounded-xl shadow-md cursor-pointer border-l-8 border-lime-500">
+                    <h3 class="text-xl font-bold text-lime-800">11. Tebak Kata Berkelompok</h3>
+                    <p class="mt-2 text-gray-600">Mainkan game tebak kata seru bersama tim!</p>
+                </div>
+                <!-- (BARU) Game 12 -->
+                <div onclick="startGame('whack-a-mole-game')" class="game-card bg-white p-6 rounded-xl shadow-md cursor-pointer border-l-8 border-rose-500">
+                    <h3 class="text-xl font-bold text-rose-800">12. Pukul Kata (Refleks)</h3>
+                    <p class="mt-2 text-gray-600">Pukul kata Arab yang benar sebelum menghilang!</p>
                 </div>
             </section>
             
@@ -146,7 +191,7 @@
         </main>
     </div>
 
-    <!-- (BARU) Modal untuk Tic Tac Toe (di luar container utama) -->
+    <!-- Modal untuk Tic Tac Toe (di luar container utama) -->
     <div id="ttt-question-modal" class="fixed inset-0 bg-black bg-opacity-60 items-center justify-center p-4 backdrop-blur-sm z-50" style="display: none;">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full" id="ttt-question-box">
             <h2 class="text-xl font-semibold text-center text-gray-700 mb-2">Apa arti dari kata ini?</h2>
@@ -203,7 +248,7 @@
         ];
         const logicalPairsData = { "السَّلَامُ عَلَيْكُمْ": "وَعَلَيْكُمُ السَّلَامُ", "مَا اسْمُكِ؟": "اسْمِي خَدِيجَةُ", "كَيْفَ حَالُكَ؟": "أَنَا بِخَيْرٍ" };
 
-        // (BARU) Data untuk Tic Tac Toe
+        // Data untuk Tic Tac Toe
         const ticTacToeData = [
             { word: "أَنَا", options: ["Saya", "Kamu (lk)", "Dia (pr)"], correct: 0 },
             { word: "قَلَمُ", options: ["Mobil", "Pena", "Tas"], correct: 1 },
@@ -226,6 +271,42 @@
             { word: "اسْمُكَ", options: ["Namamu (lk)", "Nama saya", "Namamu (pr)"], correct: 0 },
             { word: "اسْمُكِ", options: ["Nama saya", "Namamu (lk)", "Namamu (pr)"], correct: 2 }
         ];
+
+        // Data untuk Game 11: Tebak Kata Berkelompok & Game 12: Pukul Kata (Shared Data)
+        const guessGroupData = [
+            { word: "قَلَمُ", meaning: "Pena" },
+            { word: "حَقِيبَةٌ", meaning: "Tas" },
+            { word: "سَيَّارَةٌ", meaning: "Mobil" },
+            { word: "وَاحِدٌ", meaning: "Satu" },
+            { word: "كَثِيرٌ", meaning: "Banyak" },
+            { word: "قَلِيلٌ", meaning: "Sedikit" },
+            { word: "أَنَا", meaning: "Saya" },
+            { word: "اسْمِي", meaning: "Nama saya" },
+            { word: "أَنْتَ", meaning: "Kamu (lk)" },
+            { word: "أَنْتِ", meaning: "Kamu (pr)" },
+            { word: "نَعَمْ", meaning: "Ya" },
+            { word: "لَا", meaning: "Tidak" },
+            { word: "كَمْ", meaning: "Berapa" },
+            { word: "أَيْنَ", meaning: "Di mana" },
+            { word: "هُنَا", meaning: "Di sini" },
+            { word: "وَرَقَةٌ", meaning: "Kertas" }
+        ];
+
+        // Variabel Global Game 11
+        let groupGameScores = { timA: 0, timB: 0 };
+        let currentRound = 1;
+        let currentTurn = 'timA';
+        let groupGameTimer = null;
+        let groupGameShuffledDeck = [];
+
+        // (BARU) Variabel Global Game 12
+        let wamScore = 0;
+        let wamTimeLeft = 30;
+        let wamTimer = null;
+        let wamMoleTimer = null;
+        let wamTarget = null;
+        let wamIsPlaying = false;
+        let lastHole;
 
         // --- FUNGSI UTAMA ---
         function startGame(gameId) {
@@ -250,15 +331,16 @@
                 'greeting-game': setupGreetingGame,
                 'logical-pairs-game': setupLogicalPairsGame,
                 'memory-word-game': setupMemoryWordGame,
-                'tic-tac-toe-game': setupTicTacToeGame // (BARU)
+                'tic-tac-toe-game': setupTicTacToeGame, 
+                'group-guess-game': setupGroupGuessGame,
+                'whack-a-mole-game': setupWhackAMoleGame // (BARU) Game 12
             };
             if (gameFunctions[gameId]) {
                 gameFunctions[gameId](gameContent);
             }
         }
 
-        // (BARU) Objek untuk menampung logika & status Tic Tac Toe
-        // Kita letakkan di luar agar bisa diakses oleh showMenu() untuk clear timer
+        // Objek untuk menampung logika & status Tic Tac Toe
         let tttGameLogic = {
             player: 'X',
             board: Array(9).fill(''),
@@ -266,7 +348,6 @@
             targetIndex: null,
             questions: [],
             timer: null,
-            // Variabel DOM (akan di-cache saat init)
             dom: {}
         };
 
@@ -274,15 +355,24 @@
             document.getElementById('game-container').classList.add('hidden');
             document.getElementById('game-menu').classList.remove('hidden');
 
-            // (BARU) Cleanup untuk Tic Tac Toe
+            // Cleanup untuk Tic Tac Toe
             const tttModal = document.getElementById('ttt-question-modal');
             if (tttModal) tttModal.style.display = 'none';
             if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
-            // Reset TTT logic state
             tttGameLogic = { ...tttGameLogic, active: false, timer: null, dom: {} };
+
+            // Cleanup untuk Game 11
+            if (groupGameTimer) clearInterval(groupGameTimer);
+            groupGameScores = { timA: 0, timB: 0 };
+            currentRound = 1;
+            currentTurn = 'timA';
+            groupGameShuffledDeck = [];
+
+            // (BARU) Cleanup untuk Game 12
+            stopWhackAMoleGame();
         }
         
-        // --- GAME 1, 2, 4, 5 (Tidak Berubah) ---
+        // ... (Fungsi Game 1 - 11 sama seperti sebelumnya) ...
         function setupMatchGame(container) { 
             container.innerHTML = `
                 <h3 class="text-2xl font-bold text-center text-blue-800 mb-4">Pasangkan Kata!</h3>
@@ -551,8 +641,6 @@
                 }
             }
         }
-
-        // --- GAME 3, 6 (DIREVISI) & 9 (BARU) ---
         function setupArrangeLettersGame(container, wordIndex = 0) { // REVISED
             const item = arrangeWordData[wordIndex];
             const word = item.word;
@@ -755,10 +843,8 @@
             }
         }
 
-        // --- (BARU) GAME 10: TIC TAC TOE LOGIC ---
-
+        // --- GAME 10: TIC TAC TOE LOGIC ---
         function setupTicTacToeGame(container) {
-            // 1. Inject HTML untuk papan TTT
             container.innerHTML = `
                 <h3 class="text-2xl font-bold text-center text-teal-800 mb-4">Tic Tac Toe Kosa Kata</h3>
                 <div class="max-w-xs mx-auto bg-white p-4 rounded-lg shadow-inner">
@@ -766,78 +852,55 @@
                         Giliran Pemain X
                     </div>
                     <div id="ttt-board" class="grid grid-cols-3 gap-3 bg-gray-200 p-3 rounded-lg shadow-inner">
-                        <!-- Sel-sel TTT akan dibuat oleh JS -->
                     </div>
                     <button id="ttt-reset-button" class="w-full mt-6 bg-red-500 text-white py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:bg-red-600 transition">
                         Ulangi Permainan
                     </button>
                 </div>
             `;
-            
-            // 2. Panggil fungsi inisialisasi TTT
             initTicTacToeGame();
         }
-
-        // (BARU) Fungsi inisialisasi utama untuk Tic Tac Toe
         function initTicTacToeGame() {
-            // Cache DOM elements
             tttGameLogic.dom.boardElement = document.getElementById('ttt-board');
             tttGameLogic.dom.statusMessage = document.getElementById('ttt-status-message');
             tttGameLogic.dom.resetButton = document.getElementById('ttt-reset-button');
-            
-            // Modal elements (sudah ada di HTML utama)
             tttGameLogic.dom.questionModal = document.getElementById('ttt-question-modal');
             tttGameLogic.dom.questionBox = document.getElementById('ttt-question-box');
             tttGameLogic.dom.vocabWordElement = document.getElementById('ttt-vocab-word');
             tttGameLogic.dom.optionsContainer = document.getElementById('ttt-options-container');
             tttGameLogic.dom.resultMessage = document.getElementById('ttt-result-message');
             tttGameLogic.dom.timerDisplay = document.getElementById('ttt-timer-display');
-
-            // Reset state
             tttGameLogic.player = 'X';
             tttGameLogic.board = Array(9).fill('');
             tttGameLogic.active = true;
             tttGameLogic.targetIndex = null;
             if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
-            
-            // Setup UI
             tttGameLogic.dom.statusMessage.textContent = `Giliran Pemain ${tttGameLogic.player}`;
             tttGameLogic.dom.resultMessage.textContent = '';
             tttGameLogic.dom.timerDisplay.textContent = '';
             tttGameLogic.dom.boardElement.innerHTML = '';
-
             if (tttGameLogic.questions.length === 0) {
                 tttGameLogic.questions = [...ticTacToeData].sort(() => 0.5 - Math.random());
             }
-
-            // Buat sel papan
             tttGameLogic.board.forEach((_, index) => {
                 const cell = document.createElement('div');
-                // Gunakan class .ttt-cell
                 cell.className = 'ttt-cell w-full h-20 md:h-24 bg-white rounded-lg flex items-center justify-center text-5xl md:text-6xl font-bold cursor-pointer transition duration-300 hover:bg-gray-50';
                 cell.dataset.index = index;
                 cell.addEventListener('click', handleTicTacToeCellClick);
                 tttGameLogic.dom.boardElement.appendChild(cell);
             });
-
-            // Add reset listener
-            // (Clone untuk hapus listener lama jika ada)
             const oldResetButton = tttGameLogic.dom.resetButton;
             const newResetButton = oldResetButton.cloneNode(true);
             oldResetButton.parentNode.replaceChild(newResetButton, oldResetButton);
             newResetButton.addEventListener('click', initTicTacToeGame);
-            tttGameLogic.dom.resetButton = newResetButton; // Update cache
-            
-            // Pastikan modal tersembunyi
+            tttGameLogic.dom.resetButton = newResetButton;
             hideTicTacToeQuestionModal();
         }
-
         const tttWinPatterns = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
             [0, 4, 8], [2, 4, 6]
         ];
-
         function handleTicTacToeCellClick(event) {
             const clickedCellIndex = parseInt(event.target.dataset.index);
             if (tttGameLogic.board[clickedCellIndex] !== '' || !tttGameLogic.active) {
@@ -846,18 +909,15 @@
             tttGameLogic.targetIndex = clickedCellIndex;
             showTicTacToeQuestion();
         }
-
         function showTicTacToeQuestion() {
             if (tttGameLogic.questions.length === 0) {
                 tttGameLogic.questions = [...ticTacToeData].sort(() => 0.5 - Math.random());
             }
             const currentQuestion = tttGameLogic.questions.pop();
-            
             const dom = tttGameLogic.dom;
             dom.questionModal.dataset.correctIndex = currentQuestion.correct;
             dom.vocabWordElement.textContent = currentQuestion.word;
             dom.optionsContainer.innerHTML = '';
-
             currentQuestion.options.forEach((option, index) => {
                 const optionButton = document.createElement('button');
                 optionButton.className = 'game-button w-full p-3 rounded-lg text-lg font-medium text-white bg-blue-500 hover:bg-blue-600 transition duration-200';
@@ -866,13 +926,11 @@
                 optionButton.addEventListener('click', handleTicTacToeOptionClick);
                 dom.optionsContainer.appendChild(optionButton);
             });
-
             if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
-            let timeLeft = 8;
+            let timeLeft = 10;
             dom.timerDisplay.textContent = timeLeft;
             dom.timerDisplay.classList.remove('text-gray-500');
             dom.timerDisplay.classList.add('text-red-500');
-
             tttGameLogic.timer = setInterval(() => {
                 timeLeft--;
                 dom.timerDisplay.textContent = timeLeft;
@@ -881,27 +939,21 @@
                     handleTicTacToeTimeout();
                 }
             }, 1000);
-
             dom.questionModal.style.display = 'flex';
         }
-
         function hideTicTacToeQuestionModal() {
             if (tttGameLogic.timer) clearInterval(tttGameLogic.timer);
             const dom = tttGameLogic.dom;
-            // Cek jika dom.timerDisplay ada sebelum mengubah
             if(dom.timerDisplay) dom.timerDisplay.textContent = '';
             if(dom.questionModal) dom.questionModal.style.display = 'none';
             if(dom.resultMessage) dom.resultMessage.textContent = '';
         }
-
         function handleTicTacToeOptionClick(event) {
             clearInterval(tttGameLogic.timer);
             const dom = tttGameLogic.dom;
             dom.timerDisplay.classList.add('text-gray-500');
-            
             const selectedIndex = parseInt(event.target.dataset.index);
             const correctIndex = parseInt(dom.questionModal.dataset.correctIndex);
-
             if (selectedIndex === correctIndex) {
                 dom.resultMessage.textContent = 'Benar! (Correct!)';
                 dom.resultMessage.style.color = '#16A34A';
@@ -918,7 +970,6 @@
                 }, 1200);
             }
         }
-
         function handleTicTacToeTimeout() {
             const dom = tttGameLogic.dom;
             dom.resultMessage.textContent = 'Waktu Habis! Giliran lawan.';
@@ -928,17 +979,14 @@
                 hideTicTacToeQuestionModal();
             }, 1200);
         }
-
         function placeTicTacToeMark(cellIndex) {
             if (!tttGameLogic.active || tttGameLogic.board[cellIndex] !== '') return;
-
             const dom = tttGameLogic.dom;
             tttGameLogic.board[cellIndex] = tttGameLogic.player;
             const cellElement = dom.boardElement.children[cellIndex];
             cellElement.textContent = tttGameLogic.player;
             cellElement.classList.add('filled');
             cellElement.classList.add(tttGameLogic.player === 'X' ? 'text-blue-600' : 'text-pink-500');
-
             if (checkTicTacToeWin()) {
                 endTicTacToeGame(false);
             } else if (checkTicTacToeDraw()) {
@@ -947,22 +995,18 @@
                 changeTicTacToePlayer();
             }
         }
-
         function changeTicTacToePlayer() {
             tttGameLogic.player = tttGameLogic.player === 'X' ? 'O' : 'X';
             tttGameLogic.dom.statusMessage.textContent = `Giliran Pemain ${tttGameLogic.player}`;
         }
-
         function checkTicTacToeWin() {
             return tttWinPatterns.some(pattern => {
                 return pattern.every(index => tttGameLogic.board[index] === tttGameLogic.player);
             });
         }
-
         function checkTicTacToeDraw() {
             return tttGameLogic.board.every(cell => cell !== '');
         }
-
         function endTicTacToeGame(isDraw) {
             tttGameLogic.active = false;
             const dom = tttGameLogic.dom;
@@ -975,6 +1019,318 @@
             }
         }
         // --- AKHIR GAME 10 ---
+
+        // --- (BARU) GAME 11: TEBAK KATA BERKELOMPOK ---
+
+        // Layar 1: Papan Skor
+        function setupGroupGuessGame(container) {
+            // Pastikan timer sebelumnya bersih
+            if (groupGameTimer) clearInterval(groupGameTimer);
+
+            const timAText = `Tim A: ${groupGameScores.timA}`;
+            const timBText = `Tim B: ${groupGameScores.timB}`;
+            const giliranText = `Putaran ${currentRound}. Giliran untuk ${currentTurn === 'timA' ? 'TIM A' : 'TIM B'}.`;
+
+            container.innerHTML = `
+                <h3 class="text-2xl font-bold text-center text-lime-800 mb-6">Tebak Kata Berkelompok</h3>
+                <div class="text-center bg-gray-100 p-6 rounded-lg shadow-inner">
+                    <h4 class="text-3xl font-bold text-blue-600">${timAText}</h4>
+                    <h4 class="text-3xl font-bold text-red-600 mt-2">${timBText}</h4>
+                </div>
+                <p class="text-xl text-center font-semibold my-6">${giliranText}</p>
+                <button onclick="showTurnInstructions()" class="game-button w-full text-xl bg-lime-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-lime-600">
+                    Siap Main!
+                </button>
+            `;
+        }
+
+        // Layar 2: Instruksi
+        function showTurnInstructions() {
+            const gameContent = document.getElementById('game-content');
+            const timText = currentTurn === 'timA' ? 'TIM A' : 'TIM B';
+
+            gameContent.innerHTML = `
+                <h3 class="text-3xl font-bold text-center text-lime-800 mb-4">Sekarang Giliran ${timText}!</h3>
+                <div class="bg-blue-50 p-4 rounded-lg text-lg">
+                    <p class="font-semibold">Instruksi:</p>
+                    <p class="mt-2">1. Berikan HP ini kepada 1 orang yang akan menjadi "Pemberi Petunjuk".</p>
+                    <p>2. Rekan satu tim lainnya menjadi "Penebak".</p>
+                    <p class="font-semibold text-red-600 mt-4">Aturan: Pemberi Petunjuk DILARANG menyebutkan kata yang ada di layar atau artinya.</p>
+                </div>
+                <button onclick="startPlayingScreen()" class="game-button w-full text-xl mt-6 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600">
+                    Mulai
+                </button>
+            `;
+        }
+
+        // Layar 3: Bermain
+        function startPlayingScreen() {
+            let roundScore = 0;
+            let timeLeft = 60;
+            // Acak tumpukan kartu untuk putaran ini
+            groupGameShuffledDeck = [...guessGroupData].sort(() => 0.5 - Math.random());
+            
+            const gameContent = document.getElementById('game-content');
+            gameContent.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <div id="group-timer" class="text-3xl font-bold text-red-500">01:00</div>
+                    <div id="group-round-score" class="text-2xl font-semibold text-lime-800">Skor: 0</div>
+                </div>
+                <div class="bg-gray-100 rounded-xl shadow-lg p-8 h-48 flex flex-col justify-center items-center text-center">
+                    <div id="group-word-arabic" class="arabic text-5xl font-bold text-gray-900">...</div>
+                    <div id="group-word-meaning" class="text-2xl font-medium text-gray-700 mt-2">...</div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <button id="group-skip-btn" class="game-button text-xl bg-gray-400 text-white font-bold py-4 px-6 rounded-lg hover:bg-gray-500">
+                        LEWATI
+                    </button>
+                    <button id="group-correct-btn" class="game-button text-xl bg-green-500 text-white font-bold py-4 px-6 rounded-lg hover:bg-green-600">
+                        BENAR
+                    </button>
+                </div>
+            `;
+
+            // Cache DOM Layar 3
+            const timerEl = document.getElementById('group-timer');
+            const scoreEl = document.getElementById('group-round-score');
+            const wordEl = document.getElementById('group-word-arabic');
+            const meaningEl = document.getElementById('group-word-meaning');
+            const skipBtn = document.getElementById('group-skip-btn');
+            const correctBtn = document.getElementById('group-correct-btn');
+
+            function showNextWord() {
+                if (groupGameShuffledDeck.length === 0) {
+                    // Jika kata habis, anggap waktu habis
+                    if (groupGameTimer) clearInterval(groupGameTimer);
+                    groupGameScores[currentTurn] += roundScore;
+                    showTurnEndScreen(roundScore);
+                    return;
+                }
+                const card = groupGameShuffledDeck.pop();
+                wordEl.textContent = card.word;
+                meaningEl.textContent = card.meaning;
+            }
+
+            // Atur tombol
+            correctBtn.onclick = () => {
+                roundScore++;
+                scoreEl.textContent = `Skor: ${roundScore}`;
+                showNextWord();
+            };
+            skipBtn.onclick = () => {
+                showNextWord();
+            };
+
+            // Mulai Timer
+            if (groupGameTimer) clearInterval(groupGameTimer);
+            groupGameTimer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(groupGameTimer);
+                    groupGameScores[currentTurn] += roundScore;
+                    showTurnEndScreen(roundScore);
+                }
+            }, 1000);
+
+            // Tampilkan kata pertama
+            showNextWord();
+        }
+
+        // Layar 4: Giliran Selesai
+        function showTurnEndScreen(score) {
+            const gameContent = document.getElementById('game-content');
+            const timText = currentTurn === 'timA' ? 'Tim A' : 'TIM B';
+            const nextTimText = currentTurn === 'timA' ? 'Tim B' : 'Tim A';
+
+            gameContent.innerHTML = `
+                <h3 class="text-3xl font-bold text-center text-red-500 mb-4">Waktu Habis!</h3>
+                <p class="text-xl text-center mb-6">${timText} berhasil menebak <strong>${score}</strong> kata!</p>
+                <button onclick="handleNextTurn()" class="game-button w-full text-xl bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
+                    Lanjut ke Giliran ${nextTimText}
+                </button>
+            `;
+        }
+
+        // Logika Transisi
+        function handleNextTurn() {
+            if (currentTurn === 'timA') {
+                // Tim A baru selesai, sekarang giliran Tim B
+                currentTurn = 'timB';
+                showTurnInstructions(); // Kembali ke Layar 2 (Instruksi)
+            } else {
+                // Tim B baru selesai, putaran berakhir
+                currentTurn = 'timA';
+                currentRound++;
+                // Ambil game-content lagi dan panggil Layar 1 (Papan Skor)
+                const gameContent = document.getElementById('game-content');
+                setupGroupGuessGame(gameContent); 
+            }
+        }
+        // --- AKHIR GAME 11 ---
+
+        // --- (BARU) GAME 12: PUKUL KATA (WHACK-A-MOLE) ---
+        
+        function setupWhackAMoleGame(container) {
+            wamScore = 0;
+            wamTimeLeft = 30;
+            wamIsPlaying = false;
+            lastHole = null;
+
+            container.innerHTML = `
+                <h3 class="text-2xl font-bold text-center text-rose-800 mb-4">Pukul Kata (Refleks)</h3>
+                <div class="flex justify-between items-center mb-4 px-4">
+                    <div class="text-xl font-bold text-blue-700">Target: <span id="wam-target" class="text-rose-600">...</span></div>
+                    <div class="text-xl font-bold text-green-700">Skor: <span id="wam-score">0</span></div>
+                    <div class="text-xl font-bold text-red-500">Waktu: <span id="wam-timer">30</span>s</div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 max-w-sm mx-auto mb-6">
+                    <!-- 9 Lubang -->
+                    ${Array(9).fill(0).map((_, i) => `
+                        <div class="mole-hole h-24 md:h-28">
+                            <div class="mole text-2xl md:text-3xl arabic" id="hole-${i}" onclick="bonk(event)"></div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="text-center">
+                    <button id="wam-start-btn" onclick="startWhackAMole()" class="game-button bg-rose-500 text-white font-bold py-3 px-8 rounded-lg text-xl hover:bg-rose-600 shadow-lg transform transition hover:scale-105">
+                        MULAI
+                    </button>
+                </div>
+            `;
+        }
+
+        function randomTime(min, max) {
+            return Math.round(Math.random() * (max - min) + min);
+        }
+
+        function randomHole(holes) {
+            const idx = Math.floor(Math.random() * holes.length);
+            const hole = holes[idx];
+            if (hole === lastHole) return randomHole(holes);
+            lastHole = hole;
+            return hole;
+        }
+
+        function peep() {
+            if (!wamIsPlaying) return;
+            
+            const holes = document.querySelectorAll('.mole'); // Sebenarnya ini elemen mole-nya
+            const hole = randomHole(holes);
+            
+            // Tentukan kata yang muncul
+            // 40% peluang muncul kata target yang benar
+            // 60% peluang muncul kata pengcoh
+            const isTarget = Math.random() < 0.4;
+            let wordToShow;
+            
+            if (isTarget) {
+                wordToShow = wamTarget.arabic;
+                hole.dataset.isTarget = "true";
+            } else {
+                // Cari pengcoh (kata selain target)
+                let distractor = guessGroupData[Math.floor(Math.random() * guessGroupData.length)];
+                while (distractor.word === wamTarget.word) {
+                    distractor = guessGroupData[Math.floor(Math.random() * guessGroupData.length)];
+                }
+                wordToShow = distractor.word; // word di sini adalah arabic text dari guessGroupData
+                hole.dataset.isTarget = "false";
+            }
+
+            hole.textContent = wordToShow;
+            hole.classList.remove('hit', 'wrong'); // Reset status visual
+            hole.classList.add('up');
+
+            // Kecepatan muncul (makin lama makin cepat bisa diatur, tapi random 600-1000ms cukup)
+            const time = randomTime(700, 1200); 
+            
+            setTimeout(() => {
+                hole.classList.remove('up');
+                if (wamIsPlaying) peep();
+            }, time);
+        }
+
+        function startWhackAMole() {
+            // Reset UI
+            const startBtn = document.getElementById('wam-start-btn');
+            if (startBtn) startBtn.style.display = 'none';
+            
+            wamScore = 0;
+            wamTimeLeft = 30;
+            document.getElementById('wam-score').textContent = wamScore;
+            document.getElementById('wam-timer').textContent = wamTimeLeft;
+            
+            // Pilih Target Baru
+            const randomItem = guessGroupData[Math.floor(Math.random() * guessGroupData.length)];
+            // Format data guessGroupData: { word: "...", meaning: "..." }
+            // Kita sesuaikan strukturnya
+            wamTarget = { arabic: randomItem.word, meaning: randomItem.meaning };
+            document.getElementById('wam-target').textContent = wamTarget.meaning.toUpperCase();
+
+            wamIsPlaying = true;
+            
+            // Mulai Loop Muncul
+            peep();
+
+            // Mulai Timer Game
+            wamTimer = setInterval(() => {
+                wamTimeLeft--;
+                const timerEl = document.getElementById('wam-timer');
+                if (timerEl) timerEl.textContent = wamTimeLeft;
+                
+                if (wamTimeLeft <= 0) {
+                    stopWhackAMoleGame();
+                }
+            }, 1000);
+        }
+
+        function stopWhackAMoleGame() {
+            wamIsPlaying = false;
+            clearInterval(wamTimer);
+            
+            // Bersihkan semua mole yang masih up
+            const moles = document.querySelectorAll('.mole');
+            moles.forEach(mole => mole.classList.remove('up'));
+
+            const startBtn = document.getElementById('wam-start-btn');
+            if (startBtn) {
+                startBtn.style.display = 'inline-block';
+                startBtn.textContent = 'MAIN LAGI';
+            }
+            
+            // Tampilkan pesan akhir jika waktu habis (bukan karena pindah menu)
+            const container = document.getElementById('game-container');
+            // Cek apakah masih di halaman game ini
+            if (!container.classList.contains('hidden') && wamTimeLeft <= 0) {
+                 alert(`Waktu Habis! Skor Akhirmu: ${wamScore}`);
+            }
+        }
+
+        function bonk(e) {
+            if (!e.isTrusted) return; // anti-cheat script
+            if (!wamIsPlaying) return;
+
+            const mole = e.target;
+            
+            // Cek apakah ini target yang benar
+            if (mole.dataset.isTarget === "true") {
+                wamScore += 10;
+                mole.classList.add('hit');
+                // Ganti target setelah berhasil? Atau tetap sama? 
+                // Biar seru, target tetap sama satu ronde, atau bisa ganti. 
+                // Untuk kesederhanaan, target tetap sama sampai game over.
+            } else {
+                wamScore = Math.max(0, wamScore - 5); // Skor tidak boleh minus
+                mole.classList.add('wrong');
+            }
+            
+            mole.classList.remove('up');
+            document.getElementById('wam-score').textContent = wamScore;
+        }
+        // --- AKHIR GAME 12 ---
 
     </script>
 </body>
